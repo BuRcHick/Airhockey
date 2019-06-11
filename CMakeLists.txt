@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.10.2)
+set(PROJECT_NAME "Air Hockey")
+project(${PROJECT_NAME})
+add_subdirectory(source)
+add_executable(${PROJECT_NAME} game.cpp)
+#target_link_directories(${PROJECT_NAME} source)
