@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.10.2)
 set(PROJECT_NAME "AirHockey")
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 project(${PROJECT_NAME})
 add_subdirectory(source)
 add_executable(${PROJECT_NAME} game.cpp)
