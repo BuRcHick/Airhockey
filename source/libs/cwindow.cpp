@@ -78,6 +78,17 @@ void CWindow::handleEvent(){
 		quit = true;
 		SDL_Quit();
 		break;
+	case SDL_KEYDOWN:
+		switch (event.key.keysym.sym)
+		{
+		case SDLK_RIGHT:
+			printf("Right\n");
+			break;
+		
+		default:
+			break;
+		}
+		break;
 	default:
 		break;
 	}

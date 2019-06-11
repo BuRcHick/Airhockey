@@ -7,6 +7,8 @@ include_directories(${SDL2_IMAGE_INCLUDE_DIRS})
 
 add_library(
     source
+    libs/cevent.hpp
+    libs/cevent.cpp
     libs/cwindow.hpp
     libs/cwindow.cpp
     libs/cgameobj.hpp

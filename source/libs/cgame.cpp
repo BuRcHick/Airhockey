@@ -17,7 +17,7 @@ CGame::~CGame()
 /**
  * Window initialization
  */
-bool CGame::initMainWindow(
+void CGame::initMainWindow(
 	u_int32_t initF, 
 	const std::string& title, 
 	int x, int y, int w, int h, 
@@ -25,7 +25,7 @@ bool CGame::initMainWindow(
 	if(!mainWnd){
 		mainWnd = new CWindow();
 	}
-	return mainWnd->init(initF,title,x,y,w,h,wndFlags);
+	running = mainWnd->init(initF,title,x,y,w,h,wndFlags);
 }
 /**
  * Acces for the game
@@ -77,9 +77,61 @@ void CGame::draw(){
 	SDL_RenderPresent(mainWnd->getRenderer());
 }
 
-void CGame::gameProcces(){
-	while (!mainWnd->quit){
-		mainWnd->handleEvent();
+/**
+ * main game proccess
+ */
+void CGame::gameProcess(){
+	unsigned int ticks = SDL_GetTicks();
+	while (running){
+		handleGameEvents();
 		draw();
+		if((1000/FPS) > SDL_GetTicks() - ticks){
+			SDL_Delay(1000/FPS - (SDL_GetTicks() - ticks));
+		}
+	}
+}
+
+/**
+ * Moving some game object
+ */
+void CGame::moveObject(const std::string& key, int x, int y){
+	if(objects.find(key) == objects.end()){
+		perror("Error! Moving object: object doesn't excist...");
+		return;
+	}
+	std::pair<int,int>position = objects.find(key)->second->getPos();
+	objects.find(key)->second->setPos(position.first + x,position.second + y);
+}
+
+/**
+ * Handling the games events
+ */
+void CGame::handleGameEvents(){
+	SDL_Event event;
+	SDL_PollEvent(&event);
+	switch (event.type)
+	{
+	case SDL_QUIT:
+		running = false;
+		break;
+	case SDL_KEYDOWN:
+		switch (event.key.keysym.sym)
+		{
+		case SDLK_RIGHT:
+			break;
+		case SDLK_LEFT:
+			break;
+		case SDLK_UP:
+			break;
+		case SDLK_DOWN:
+			break;
+		default:
+			break;
+		}
+		break;
+	case SDL_USEREVENT:
+		break;
+	default:
+		break;
 	}
 }
