@@ -1,14 +1,16 @@
 #include "cevent.hpp"
-int CEvent::eventCode = 0;
-
 CEvent::CEvent(/* args */)
 {
-	++eventCode;
-	event.user.code = eventCode;
-	event.type = SDL_USEREVENT;
 }
 
 CEvent::~CEvent()
 {
-	--eventCode;
+}
+
+void CEvent::setFunc(const std::function<void()>& _func){
+	func = _func;
+}
+
+void CEvent::execFunc(){
+	func();
 }

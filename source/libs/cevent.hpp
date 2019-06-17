@@ -1,20 +1,39 @@
 #ifndef CEVENT
 #define CEVENT
-#include "SDL2/SDL.h"
 #include <stdio.h>
+#include <functional>
+#include <algorithm>
+#include <initializer_list>
+
+enum class UserEvents{
+	GameOver,
+	GamePause,
+	CounterUpdate,
+	CounterReset,
+	ObjectShow,
+	ObjectRemove,
+	ObjectUpdate,
+	ObjectCreate,
+	ObjectMove,
+	ObjectMoveLeft,
+	ObjectMoveRight,
+	ObjectMoveTop,
+	ObjectMoveBottom
+};
 
 class CEvent
 {
 private:
-	SDL_Event event;
-	static int eventCode;
+	std::function<void()> func;
 public:
 	CEvent();
+	CEvent(const std::function<void()>& _func)
+		:func(_func)
+	{};
 	~CEvent();
-	CEvent(const CEvent&) = delete;
-	CEvent& operator = (const CEvent&) = delete;
-	CEvent(CEvent&&) = delete;
-	const int getCode() const {return event.user.code;}
+	void setFunc(const std::function<void()>&);
+	void execFunc();
 };
+
 
 #endif //CEVENT

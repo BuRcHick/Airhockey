@@ -2,18 +2,17 @@
 #define CGAME
 #include "cgameobj.hpp"
 #include "cwindow.hpp"
-#include "cevent.hpp"
+#include "сeventmanager.hpp"
 #include <memory>
 #include <unordered_map>
-
-#define FPS 60
+#include <functional>
 
 class CGame
 {
 private:
 	bool running;
 	CWindow* mainWnd;
-	std::unordered_map<std::string, std::unique_ptr<CGameObj> > objects;
+	std::unordered_map<std::string, std::shared_ptr<CGameObj> > objects;
 	CGame();
 	~CGame();
 	static CGame* gameInst;
@@ -23,7 +22,7 @@ public:
 	CGame(CGame&&) = delete;
 	static CGame* getGameInst();
 	void initMainWindow(u_int32_t initF, const std::string& title, int x, int y, int w, int h, u_int32_t wndFlags);
-	bool addObject(const std::string&, std::unique_ptr<CGameObj>);
+	bool addObject(const std::string&, std::shared_ptr<CGameObj>);
 	void removeObject(const std::string&);
 	void gameProcess();
 	void draw();
@@ -31,6 +30,7 @@ public:
 	void moveObject(const std::string&, int, int);
 	void moveObjectTo(const std::string&, int, int);
 	void handleGameEvents();
+	const std::shared_ptr<CGameObj> getObj(const std::string& key) const {return objects.find(key)->second; };
 };
 
 #endif //CGAME

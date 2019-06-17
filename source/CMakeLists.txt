@@ -9,10 +9,12 @@ add_library(
     source
     libs/cevent.hpp
     libs/cevent.cpp
-    libs/cwindow.hpp
-    libs/cwindow.cpp
     libs/cgameobj.hpp
     libs/cgameobj.cpp
+    libs/сeventmanager.hpp
+    libs/сeventmanager.cpp
+    libs/cwindow.hpp
+    libs/cwindow.cpp
     libs/cgame.hpp
     libs/cgame.cpp
 )

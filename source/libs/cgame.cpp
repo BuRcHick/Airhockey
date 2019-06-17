@@ -1,4 +1,7 @@
 #include "cgame.hpp"
+#define FPS 120
+const int frameDelay = 1000/FPS;
+
 CGame* CGame::gameInst = nullptr;
 
 CGame::CGame(/* args */)
@@ -45,12 +48,15 @@ CGame* CGame::getGameInst(){
 /**
  * Add game object to main window
  */
-bool CGame::addObject(const std::string& key, std::unique_ptr<CGameObj> obj){
+bool CGame::addObject(const std::string& key, std::shared_ptr<CGameObj> obj){
 	if(objects.find(key) != objects.end()){
 		perror("Error! Add object to game... Same obj excist!");
 		return false;
 	}
-	objects[key] = std::move(obj);
+	obj->addEvent(UserEvents::ObjectMoveRight,[&](){
+		CGame::getGameInst()->moveObject(key,10,0);
+	});
+	objects[key] = obj;
 	return true;
 }
 
@@ -81,12 +87,15 @@ void CGame::draw(){
  * main game proccess
  */
 void CGame::gameProcess(){
-	unsigned int ticks = SDL_GetTicks();
+	int ticks = 0;
+	int time = 0;
 	while (running){
+		ticks = SDL_GetTicks();
 		handleGameEvents();
 		draw();
-		if((1000/FPS) > SDL_GetTicks() - ticks){
-			SDL_Delay(1000/FPS - (SDL_GetTicks() - ticks));
+		time = SDL_GetTicks() - ticks;
+		if(frameDelay > time){
+			SDL_Delay(frameDelay - time);
 		}
 	}
 }
@@ -118,6 +127,7 @@ void CGame::handleGameEvents(){
 		switch (event.key.keysym.sym)
 		{
 		case SDLK_RIGHT:
+			CEventManager::getManager()->trigerEvent(UserEvents::ObjectMoveRight,"arrow");
 			break;
 		case SDLK_LEFT:
 			break;
@@ -130,6 +140,7 @@ void CGame::handleGameEvents(){
 		}
 		break;
 	case SDL_USEREVENT:
+		getObj((const char*)event.user.data1)->runEventFunc((UserEvents)event.user.code);
 		break;
 	default:
 		break;

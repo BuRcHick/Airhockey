@@ -22,6 +22,7 @@ CGameObj::CGameObj(CGameObj&& obj){
 
 CGameObj::~CGameObj(){
 	SDL_DestroyTexture(texture);
+	printf("GameObject deleted successfuly!\n");
 }
 
 /**
@@ -46,4 +47,48 @@ void CGameObj::renderTexture(SDL_Renderer* rndr){
 	rect.w = width;
 	rect.h = heigth;
 	SDL_RenderCopy(rndr,texture,NULL,&rect);
+}
+
+/**
+ * Running the object event function
+ */
+void CGameObj::runEventFunc(const UserEvents eventType){
+	if(!ifEventExcist(eventType)){
+		perror("Error! Event doesn't excist...");
+		return;
+	}
+	events.find(eventType)->second->execFunc();
+}
+
+/**
+ * Add event to object
+ */
+bool CGameObj::addEvent(const UserEvents eventType, std::shared_ptr<CEvent> event){
+	if(ifEventExcist(eventType)){
+		perror("Error! Event already excist...");
+		return false;
+	}
+	events[eventType] = event;
+	return true;
+}
+
+bool CGameObj::addEvent(const UserEvents eventType, const std::function<void()>& eventFunc){
+	if(ifEventExcist(eventType)){
+		perror("Error! Event already excist...");
+		return false;
+	}
+	events[eventType] = std::make_shared<CEvent>(eventFunc);
+	return true;
+}
+
+/**
+ * Remove event
+ */
+bool CGameObj::removeEvent(const UserEvents eventType){
+	if(!ifEventExcist(eventType)){
+		perror("Error! Event doesn't excist...");
+		return false;
+	}
+	events.erase(eventType);
+	return true;
 }
