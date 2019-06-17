@@ -14,6 +14,7 @@ CGame::~CGame()
 {
 	printf("End Game\n");
 	objects.clear();
+	presets.clear();
 	delete mainWnd;
 }
 
@@ -53,9 +54,6 @@ bool CGame::addObject(const std::string& key, std::shared_ptr<CGameObj> obj){
 		perror("Error! Add object to game... Same obj excist!");
 		return false;
 	}
-	obj->addEvent(UserEvents::ObjectMoveRight,[&](){
-		CGame::getGameInst()->moveObject(key,10,0);
-	});
 	objects[key] = obj;
 	return true;
 }
@@ -127,7 +125,6 @@ void CGame::handleGameEvents(){
 		switch (event.key.keysym.sym)
 		{
 		case SDLK_RIGHT:
-			CEventManager::getManager()->trigerEvent(UserEvents::ObjectMoveRight,"arrow");
 			break;
 		case SDLK_LEFT:
 			break;
@@ -145,4 +142,44 @@ void CGame::handleGameEvents(){
 	default:
 		break;
 	}
+}
+
+/**
+ * Adding preset 
+ */
+
+bool CGame::addPreset(const std::string& descr, std::unique_ptr<CPreset> preset){
+	if(ifPresetExcist(descr)){
+		perror("Error! Preset already excist...");
+		return false;
+	}
+	presets[descr] = std::move(preset);
+	return true;
+}
+
+bool CGame::removePreset(const std::string& descr){
+	if(!ifPresetExcist(descr)){
+		perror("Error! The preset doesn't excist...");
+		return false;
+	}
+	presets.erase(descr);
+	return true;
+}
+
+bool CGame::updatePreset(const std::string& descr, std::function<void()> func){
+	if(!ifPresetExcist(descr)){
+		perror("Error! The preset doesn't excist...");
+		return false;
+	}
+	presets.find(descr)->second->createPreset(func);
+	return true;
+}
+
+bool CGame::runPreset(const std::string& descr){
+	if(!ifPresetExcist(descr)){
+		perror("Error! The preset doesn't excist...");
+		return false;
+	}
+	presets.find(descr)->second->runPreset();
+	return true;
 }

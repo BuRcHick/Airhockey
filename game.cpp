@@ -2,8 +2,10 @@
 #include "cgame.hpp"
 
 int main(){
-	auto text = std::make_shared<CGameObj>();
-	auto arrow = std::make_shared<CGameObj>();	
+	auto ball = std::make_shared<CGameObj>();
+	auto player1 = std::make_shared<CGameObj>();
+	auto player2 = std::make_shared<CGameObj>();
+	auto mainMenu = std::make_unique<CPreset>();
 	CGame::getGameInst()->initMainWindow(
 		SDL_INIT_EVERYTHING,
 		"Lolkek",
@@ -12,12 +14,23 @@ int main(){
 		500,
 		500,
 		SDL_WINDOW_SHOWN);
-	text->loadTexture(CGame::getGameInst()->getGameWindow()->getRenderer(),"/home/sergo/Tutorials/SDL2/TwinklebearDev-Lessons/res/Lesson3/image.png");
-	arrow->loadTexture(CGame::getGameInst()->getGameWindow()->getRenderer(),"/home/sergo/Airhockey/source/pictures/arrow.png");
-	arrow->setSize(100,60);
-	CGame::getGameInst()->addObject("Text",text);
-	arrow->setPos(0,0);
-	CGame::getGameInst()->addObject("arrow",arrow);
-	CGame::getGameInst()->gameProcess();
+	SDL_Renderer* rndr = CGame::getGameInst()->getGameWindow()->getRenderer();
+	mainMenu->createPreset([&](){
+		ball->loadTexture(rndr,PICTURES_FOLDER + (std::string)"/ball.png");
+		ball->setSize(100,100);
+		ball->setPos(0,0);
+		player1->loadTexture(rndr,PICTURES_FOLDER + (std::string)"/red.png");
+		player1->setSize(50,50);
+		player1->setPos(0,ball->getSize().second);
+		player2->loadTexture(rndr,PICTURES_FOLDER + (std::string)"/red2.png");
+		player2->setSize(50,50);
+		player2->setPos(0,player1->getSize().second + player1->getPos().second);
+		CGame::getGameInst()->addObject("ball",ball);
+		CGame::getGameInst()->addObject("player1",player1);
+		CGame::getGameInst()->addObject("player2",player2);
+		CGame::getGameInst()->gameProcess();
+	});
+	CGame::getGameInst()->addPreset("MainMenu",std::move(mainMenu));
+	CGame::getGameInst()->runPreset("MainMenu");
 	return 0;
 }

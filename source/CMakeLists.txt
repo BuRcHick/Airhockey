@@ -15,8 +15,11 @@ add_library(
     libs/сeventmanager.cpp
     libs/cwindow.hpp
     libs/cwindow.cpp
+    libs/cpreset.hpp
+    libs/cpreset.cpp
     libs/cgame.hpp
     libs/cgame.cpp
 )
 target_link_libraries(source ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARY})
 target_include_directories(source PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/libs")
+target_compile_definitions(source PUBLIC PICTURES_FOLDER="${CMAKE_CURRENT_SOURCE_DIR}/pictures")
