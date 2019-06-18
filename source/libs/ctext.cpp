@@ -8,7 +8,6 @@ CText::CText(/* args */)
 
 CText::~CText()
 {
-	printf("Remove text\n");
 }
 
 bool CText::createText(

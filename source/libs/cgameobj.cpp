@@ -22,7 +22,6 @@ CGameObj::CGameObj(CGameObj&& obj){
 
 CGameObj::~CGameObj(){
 	SDL_DestroyTexture(texture);
-	printf("GameObject deleted successfuly!\n");
 }
 
 /**

@@ -21,6 +21,8 @@ add_library(
     libs/cwindow.cpp
     libs/cpreset.hpp
     libs/cpreset.cpp
+    libs/cpresetmanager.hpp
+    libs/cpresetmanager.cpp
     libs/cgame.hpp
     libs/cgame.cpp
 )

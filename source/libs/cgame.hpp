@@ -14,7 +14,6 @@ private:
 	bool running;
 	CWindow* mainWnd;
 	std::unordered_map<std::string, std::shared_ptr<CGameObj> > objects;
-	std::unordered_map<std::string, std::unique_ptr<CPreset> > presets;
 	std::function<void()> handleGameEvents;
 	CGame();
 	~CGame();
@@ -34,14 +33,10 @@ public:
 	void moveObjectTo(const std::string&, int, int);
 	void setGameEventsHendlers(const std::function<void()>&);
 	const std::shared_ptr<CGameObj> getObj(const std::string& key) const {return objects.find(key)->second; };
-	bool ifPresetExcist(const std::string& descr)const{return presets.find(descr) != presets.end();};
-	bool addPreset(const std::string&,std::unique_ptr<CPreset>);
-	bool removePreset(const std::string&);
-	bool updatePreset(const std::string&,std::function<void()>);
-	bool runPreset(const std::string&);
 	void changeGameProcess(bool run){running = run;};
 	void ereseGameObjects(){objects.clear();};
 	bool ifRunning()const {return running;};
+	bool ifObjectsEmpty()const {return objects.empty();};
 };
 
 #endif //CGAME

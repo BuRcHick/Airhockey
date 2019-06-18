@@ -19,7 +19,8 @@ enum class UserEvents{
 	ObjectMoveRight,
 	ObjectMoveUp,
 	ObjectMoveDown,
-	PressEnter
+	PressEnter,
+	SwitchToAnotherPresset
 };
 
 class CEvent

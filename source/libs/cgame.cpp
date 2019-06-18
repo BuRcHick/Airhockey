@@ -14,7 +14,6 @@ CGame::~CGame()
 {
 	printf("End Game\n");
 	objects.clear();
-	presets.clear();
 	delete mainWnd;
 }
 
@@ -96,6 +95,7 @@ void CGame::gameProcess(){
 			SDL_Delay(frameDelay - time);
 		}
 	}
+	printf("EndProcces\n");
 }
 
 /**
@@ -115,44 +115,4 @@ void CGame::moveObject(const std::string& key, int x, int y){
  */
 void CGame::setGameEventsHendlers(const std::function<void()>& events){
 	handleGameEvents = events;
-}
-
-/**
- * Adding preset 
- */
-
-bool CGame::addPreset(const std::string& descr, std::unique_ptr<CPreset> preset){
-	if(ifPresetExcist(descr)){
-		perror("Error! Preset already excist...");
-		return false;
-	}
-	presets[descr] = std::move(preset);
-	return true;
-}
-
-bool CGame::removePreset(const std::string& descr){
-	if(!ifPresetExcist(descr)){
-		perror("Error! The preset doesn't excist...");
-		return false;
-	}
-	presets.erase(descr);
-	return true;
-}
-
-bool CGame::updatePreset(const std::string& descr, std::function<void()> func){
-	if(!ifPresetExcist(descr)){
-		perror("Error! The preset doesn't excist...");
-		return false;
-	}
-	presets.find(descr)->second->createPreset(func);
-	return true;
-}
-
-bool CGame::runPreset(const std::string& descr){
-	if(!ifPresetExcist(descr)){
-		perror("Error! The preset doesn't excist...");
-		return false;
-	}
-	presets.find(descr)->second->runPreset();
-	return true;
 }
