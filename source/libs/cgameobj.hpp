@@ -19,10 +19,10 @@ public:
 	CGameObj(const CGameObj&) = delete;
 	CGameObj& operator = (const CGameObj&) = delete;
 	CGameObj(CGameObj&&);
-	~CGameObj();
+	virtual ~CGameObj();
 
 	bool loadTexture(SDL_Renderer*,const std::string& path);
-	void renderTexture(SDL_Renderer*);
+	virtual void renderTexture(SDL_Renderer*);
 	void setPos(int x, int y){posX = x; posY = y;};
 	void setSize(unsigned int w, unsigned int h){width = w; heigth = h;}
 	const std::pair<int, int> getPos(){return std::make_pair(posX,posY);}
@@ -32,6 +32,9 @@ public:
 	bool addEvent(const UserEvents, const std::function<void()>&);
 	bool removeEvent(const UserEvents);
 	bool ifEventExcist(const UserEvents eventType)const{return events.find(eventType) != events.end(); };
+	void setTexture(SDL_Texture*);
+	SDL_Texture* getTexture() const {return texture;};
+	const std::pair<int,int> getPos() const {return std::make_pair(posX,posY);};
 };
 
 

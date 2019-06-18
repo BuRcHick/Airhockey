@@ -113,35 +113,8 @@ void CGame::moveObject(const std::string& key, int x, int y){
 /**
  * Handling the games events
  */
-void CGame::handleGameEvents(){
-	SDL_Event event;
-	SDL_PollEvent(&event);
-	switch (event.type)
-	{
-	case SDL_QUIT:
-		running = false;
-		break;
-	case SDL_KEYDOWN:
-		switch (event.key.keysym.sym)
-		{
-		case SDLK_RIGHT:
-			break;
-		case SDLK_LEFT:
-			break;
-		case SDLK_UP:
-			break;
-		case SDLK_DOWN:
-			break;
-		default:
-			break;
-		}
-		break;
-	case SDL_USEREVENT:
-		getObj((const char*)event.user.data1)->runEventFunc((UserEvents)event.user.code);
-		break;
-	default:
-		break;
-	}
+void CGame::setGameEventsHendlers(const std::function<void()>& events){
+	handleGameEvents = events;
 }
 
 /**

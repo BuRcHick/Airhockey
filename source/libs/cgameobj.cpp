@@ -92,3 +92,14 @@ bool CGameObj::removeEvent(const UserEvents eventType){
 	events.erase(eventType);
 	return true;
 }
+
+void CGameObj::setTexture(SDL_Texture* _texture){
+	if(!_texture){
+		perror("Error! Texture settings nulptr...");
+		return;
+	}
+	if(texture){
+		SDL_DestroyTexture(texture);
+	}
+	texture = _texture;
+}

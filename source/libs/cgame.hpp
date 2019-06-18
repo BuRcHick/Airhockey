@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <functional>
 #include "cpreset.hpp"
+#include "ctext.hpp"
 class CGame
 {
 private:
@@ -14,6 +15,7 @@ private:
 	CWindow* mainWnd;
 	std::unordered_map<std::string, std::shared_ptr<CGameObj> > objects;
 	std::unordered_map<std::string, std::unique_ptr<CPreset> > presets;
+	std::function<void()> handleGameEvents;
 	CGame();
 	~CGame();
 	static CGame* gameInst;
@@ -30,13 +32,16 @@ public:
 	CWindow* getGameWindow()const{return mainWnd;};
 	void moveObject(const std::string&, int, int);
 	void moveObjectTo(const std::string&, int, int);
-	void handleGameEvents();
+	void setGameEventsHendlers(const std::function<void()>&);
 	const std::shared_ptr<CGameObj> getObj(const std::string& key) const {return objects.find(key)->second; };
 	bool ifPresetExcist(const std::string& descr)const{return presets.find(descr) != presets.end();};
 	bool addPreset(const std::string&,std::unique_ptr<CPreset>);
 	bool removePreset(const std::string&);
 	bool updatePreset(const std::string&,std::function<void()>);
 	bool runPreset(const std::string&);
+	void changeGameProcess(bool run){running = run;};
+	void ereseGameObjects(){objects.clear();};
+	bool ifRunning()const {return running;};
 };
 
 #endif //CGAME
