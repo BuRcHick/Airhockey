@@ -37,6 +37,7 @@ set_property(TARGET SDL2_ttf PROPERTY
 target_link_libraries(source SDL2 SDL2_image SDL2_ttf)
 
 target_include_directories(source PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/libs")
+
 target_compile_definitions(source PUBLIC PICTURES_FOLDER="${CMAKE_CURRENT_SOURCE_DIR}/pictures")
 target_compile_definitions(source PUBLIC FONTS_FOLDER="${CMAKE_CURRENT_SOURCE_DIR}/font")
 
