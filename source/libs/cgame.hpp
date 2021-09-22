@@ -23,7 +23,7 @@ public:
     CGame& operator = (const CGame&) = delete;
     CGame(CGame&&) = delete;
     static CGame* getGameInst();
-    void initMainWindow(u_int32_t initF, const std::string& title, int x, int y, int w, int h, u_int32_t wndFlags);
+    void initMainWindow(int initF, const std::string& title, int x, int y, int w, int h, int wndFlags);
     bool addObject(const std::string&, std::shared_ptr<CGameObj>);
     void removeObject(const std::string&);
     void gameProcess();

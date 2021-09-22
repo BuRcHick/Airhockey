@@ -35,26 +35,24 @@ CWindow::~CWindow(){
 /**
  * Initialization subsystems, Window and Renderer
  */
-bool CWindow::init(
-    u_int32_t initF, 
-    const std::string& title, 
-    int x, 
-    int y, 
-    int w, 
-    int h, 
-    u_int32_t wndFlags){
+bool CWindow::init(int initF, const std::string& title, int x, int y, int w,
+    int h, int wndFlags) {
+
     if(SDL_Init(initF) != 0){
         perror("Error! SDL_Init...");
         return false;
     }
+
     if(!(mWnd = SDL_CreateWindow(title.c_str(),x,y,w,h,wndFlags))){
         perror("Error! The window creating failed...");
         return false;
     }
+
     if(!(mRndr = SDL_CreateRenderer(mWnd,-1,0))){
         perror("Error! The renderer creating failed...");
         return false;
     }
+
     return true;
 }
 
@@ -84,7 +82,7 @@ void CWindow::handleEvent(){
         case SDLK_RIGHT:
             printf("Right\n");
             break;
-        
+
         default:
             break;
         }

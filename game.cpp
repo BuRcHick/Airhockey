@@ -10,16 +10,14 @@
 int main(){
     auto mainMenu = std::make_shared<CPreset>();
     auto background = std::make_shared<CGameObj>();
-    CGame::getGameInst()->initMainWindow(
-        SDL_INIT_EVERYTHING,
-        "Lolkek",
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        WIDTH,
-        HEIGHT,
-        SDL_WINDOW_SHOWN);
+
+    CGame::getGameInst()->initMainWindow(SDL_INIT_VIDEO, "Lolkek",
+                                         SDL_WINDOWPOS_CENTERED,
+                                         SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT,
+                                         SDL_WINDOW_SHOWN);
+
     SDL_Renderer* rndr = CGame::getGameInst()->getGameWindow()->getRenderer();
-    background->loadTexture(rndr,PICTURES_FOLDER + (std::string)"/background.png"); 
+    background->loadTexture(rndr,PICTURES_FOLDER + (std::string)"/background.png");
     SDL_ShowCursor(SDL_DISABLE);
     mainMenu->createPreset([&](){
         auto startText = std::make_shared<CText>();
@@ -116,7 +114,7 @@ int main(){
         auto ball = std::make_shared<CGameObj>();
         ball->loadTexture(rndr,PICTURES_FOLDER + (std::string)"/ball.png");
         auto player1 = std::make_shared<CGameObj>();
-        player1->loadTexture(rndr,PICTURES_FOLDER + (std::string)"/red.png");       
+        player1->loadTexture(rndr,PICTURES_FOLDER + (std::string)"/red.png");
         auto player2 = std::make_shared<CGameObj>();
         player2->loadTexture(rndr,PICTURES_FOLDER + (std::string)"/red2.png");
         ball->setSize(50,50);
@@ -139,13 +137,13 @@ int main(){
                 CPresetManager::getManager()->setToInactive();
                 break;
             case SDL_MOUSEMOTION:
-                if((event.motion.y > HEIGHT/2) 
+                if((event.motion.y > HEIGHT/2)
                 && (event.motion.y < (HEIGHT - player2->getSize().second-20))
                 && (event.motion.x > 20)
                 && (event.motion.x < (WIDTH - player2->getSize().first - 20))
                 ){
                     player2->setPos(event.motion.x,event.motion.y);
-                }else if((event.motion.y > HEIGHT/2) 
+                }else if((event.motion.y > HEIGHT/2)
                 && (event.motion.y < (HEIGHT - player2->getSize().second-20))){
                     player2->setPos(player2->getPos().first,event.motion.y);
                 }else if((event.motion.x > 20)
@@ -184,7 +182,7 @@ int main(){
                 }
                 break;
             case SDL_MOUSEMOTION:
-                CEventManager::getManager()->trigerEvent(UserEvents::ObjectMove,"player2");             
+                CEventManager::getManager()->trigerEvent(UserEvents::ObjectMove,"player2");
                 break;
             case SDL_USEREVENT:
                 CGame::getGameInst()->getObj((const char*)event.user.data1)->runEventFunc((UserEvents)event.user.code);
@@ -206,3 +204,4 @@ int main(){
     CPresetManager::getManager()->exec();
     return 0;
 }
+

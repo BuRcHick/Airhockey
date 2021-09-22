@@ -7,10 +7,10 @@ class CText : public CGameObj
 {
 private:
 public:
-	CText(/* args */);
-	~CText();
-	bool createText(const std::string&,const std::string&, SDL_Color,int, SDL_Renderer*);
-	void renderTexture(SDL_Renderer*);
+    CText(/* args */);
+    ~CText();
+    bool createText(const std::string&,const std::string&, SDL_Color,int, SDL_Renderer*);
+    void renderTexture(SDL_Renderer*);
 };
 
 #endif //CTEXT

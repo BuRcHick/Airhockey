@@ -12,9 +12,9 @@ CText::~CText()
 
 bool CText::createText(
     const std::string& text,
-    const std::string& fontFile, 
+    const std::string& fontFile,
     SDL_Color color,
-    int fontSize, 
+    int fontSize,
     SDL_Renderer* rndr){
     TTF_Font *font = TTF_OpenFont(fontFile.c_str(), fontSize);
     if (font == nullptr){

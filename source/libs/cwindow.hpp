@@ -18,7 +18,7 @@ public:
     CWindow& operator = (const CWindow&) = delete;
     CWindow(CWindow &&);
 
-    bool init(u_int32_t initF, const std::string& title, int x, int y, int w, int h, u_int32_t wndFlags);
+    bool init(int initF, const std::string& title, int x, int y, int w, int h, int wndFlags);
     void handleEvent();
     bool show();
 

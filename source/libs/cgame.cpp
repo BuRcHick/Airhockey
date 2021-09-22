@@ -20,11 +20,8 @@ CGame::~CGame()
 /**
  * Window initialization
  */
-void CGame::initMainWindow(
-    u_int32_t initF, 
-    const std::string& title, 
-    int x, int y, int w, int h, 
-    u_int32_t wndFlags){
+void CGame::initMainWindow(int initF, const std::string& title, int x, int y,
+    int w, int h, int wndFlags) {
     if(!mainWnd){
         mainWnd = new CWindow();
     }
@@ -40,7 +37,7 @@ CGame* CGame::getGameInst(){
         {
             ~gameEraser(){delete gameInst; }
         };
-        static gameEraser eraser;   
+        static gameEraser eraser;
     }
     return gameInst;
 }

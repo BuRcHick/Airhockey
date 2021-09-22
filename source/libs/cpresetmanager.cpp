@@ -87,7 +87,7 @@ void CPresetManager::exec(){
             activePreset = nullptr;
         }
         activePreset->runPreset();
-    } while (activePreset); 
+    } while (activePreset);
 }
 
 CPreset* CPresetManager::getPreset(const std::string& descr){
