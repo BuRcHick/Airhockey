@@ -6,5 +6,5 @@ CPreset::CPreset(/* args */)
 
 CPreset::~CPreset()
 {
-	printf("Remove preset\n");
+    printf("Remove preset\n");
 }

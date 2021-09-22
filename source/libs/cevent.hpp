@@ -6,35 +6,35 @@
 #include <initializer_list>
 
 enum class UserEvents{
-	GameOver,
-	GamePause,
-	CounterUpdate,
-	CounterReset,
-	ObjectShow,
-	ObjectRemove,
-	ObjectUpdate,
-	ObjectCreate,
-	ObjectMove,
-	ObjectMoveLeft,
-	ObjectMoveRight,
-	ObjectMoveUp,
-	ObjectMoveDown,
-	PressEnter,
-	SwitchToAnotherPresset
+    GameOver,
+    GamePause,
+    CounterUpdate,
+    CounterReset,
+    ObjectShow,
+    ObjectRemove,
+    ObjectUpdate,
+    ObjectCreate,
+    ObjectMove,
+    ObjectMoveLeft,
+    ObjectMoveRight,
+    ObjectMoveUp,
+    ObjectMoveDown,
+    PressEnter,
+    SwitchToAnotherPresset
 };
 
 class CEvent
 {
 private:
-	std::function<void()> func;
+    std::function<void()> func;
 public:
-	CEvent();
-	CEvent(const std::function<void()>& _func)
-		:func(_func)
-	{};
-	~CEvent();
-	void setFunc(const std::function<void()>&);
-	void execFunc();
+    CEvent();
+    CEvent(const std::function<void()>& _func)
+        :func(_func)
+    {};
+    ~CEvent();
+    void setFunc(const std::function<void()>&);
+    void execFunc();
 };
 
 
