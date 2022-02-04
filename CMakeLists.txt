@@ -3,9 +3,8 @@ set(PROJECT_NAME "AirHockey")
 project(${PROJECT_NAME})
 add_subdirectory(source)
 
-include_directories("${PROJECT_SOURCE_DIR}/external/SDL/include")
-include_directories("${PROJECT_SOURCE_DIR}/external/SDL_image")
-include_directories("${PROJECT_SOURCE_DIR}/external/SDL_ttf")
+include_directories("${PROJECT_SOURCE_DIR}/external/include")
+include_directories("${PROJECT_SOURCE_DIR}/source/libs")
 
 SET(GCC_COVERAGE_COMPILE_FLAGS "-fprofile-arcs -ftest-coverage")
 SET(GCC_COVERAGE_LINK_FLAGS    "-lgcov")

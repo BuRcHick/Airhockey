@@ -1,7 +1,7 @@
 #ifndef CTEXT
 #define CTEXT
 #include "cgameobj.hpp"
-#include "SDL_ttf.h"
+#include "SDL2/SDL_ttf.h"
 
 class CText : public CGameObj
 {

@@ -1,6 +1,6 @@
 #ifndef EVENTS
 #define EVENTS
-#include "SDL.h"
+#include "SDL2/SDL.h"
 #include <stdio.h>
 #include <memory>
 #include <unordered_map>
