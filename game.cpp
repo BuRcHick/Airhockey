@@ -11,10 +11,9 @@ int main(){
     auto mainMenu = std::make_shared<CPreset>();
     auto background = std::make_shared<CGameObj>();
 
-    CGame::getGameInst()->initMainWindow(SDL_INIT_VIDEO, "Lolkek",
-                                         SDL_WINDOWPOS_CENTERED,
-                                         SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT,
-                                         SDL_WINDOW_SHOWN);
+    CGame::getGameInst()->init(SDL_INIT_VIDEO);
+    CGame::getGameInst()->getGameWindow()->resize(WIDTH, HEIGHT);
+    CGame::getGameInst()->getGameWindow()->show();
 
     SDL_Renderer* rndr = CGame::getGameInst()->getGameWindow()->getRenderer();
     background->loadTexture(rndr,PICTURES_FOLDER + (std::string)"/background.png");

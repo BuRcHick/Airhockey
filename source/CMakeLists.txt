@@ -1,5 +1,6 @@
 include_directories("${PROJECT_SOURCE_DIR}/external/include")
 include_directories("${PROJECT_SOURCE_DIR}/source/libs")
+include_directories("${PROJECT_SOURCE_DIR}/engine")
 
 add_library(
     source
@@ -11,8 +12,6 @@ add_library(
     libs/ctext.cpp
     libs/сeventmanager.hpp
     libs/сeventmanager.cpp
-    libs/cwindow.hpp
-    libs/cwindow.cpp
     libs/cpreset.hpp
     libs/cpreset.cpp
     libs/cpresetmanager.hpp

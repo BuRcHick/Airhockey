@@ -1,4 +1,5 @@
 #include "cgame.hpp"
+#include <cstdio>
 #define FPS 120
 const int frameDelay = 1000/FPS;
 
@@ -20,12 +21,16 @@ CGame::~CGame()
 /**
  * Window initialization
  */
-void CGame::initMainWindow(int initF, const std::string& title, int x, int y,
-    int w, int h, int wndFlags) {
-    if(!mainWnd){
-        mainWnd = new CWindow();
+void CGame::init(int initF)
+{
+    if (SDL_Init(initF) < 0) {
+        perror("Failed to init SDL");
+        return;
     }
-    running = mainWnd->init(initF,title,x,y,w,h,wndFlags);
+
+    if(!mainWnd){
+        mainWnd = Window::create("AirHockey");
+    }
 }
 /**
  * Acces for the game
