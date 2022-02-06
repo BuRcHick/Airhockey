@@ -6,6 +6,7 @@ add_library(
     window/window.cpp
     texture/texture.cpp
     texture/texture_manager.cpp
+    hitbox/hitbox_2d.cpp
 )
 
 find_library(SDL2 NAMES "SDL2")
