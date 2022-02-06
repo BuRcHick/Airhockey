@@ -1,9 +1,12 @@
 [submodule "external/libs/SDL2"]
 	path = external/libs/SDL2
 	url = https://github.com/libsdl-org/SDL.git
+    ignore = dirty
 [submodule "external/libs/SDL2_image"]
 	path = external/libs/SDL2_image
-	url = https://github.com/libsdl-org/SDL_image.git
+    url = https://github.com/libsdl-org/SDL_image.git
+    ignore = dirty
 [submodule "external/libs/SDL2_ttf"]
 	path = external/libs/SDL2_ttf
-	url = https://github.com/libsdl-org/SDL_ttf.git
+    url = https://github.com/libsdl-org/SDL_ttf.git
+    ignore = dirty
