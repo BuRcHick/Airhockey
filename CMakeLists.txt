@@ -3,19 +3,10 @@ set(PROJECT_NAME "AirHockey")
 project(${PROJECT_NAME})
 
 add_subdirectory(engine)
-add_subdirectory(source)
+add_subdirectory(App)
 
 include_directories("${PROJECT_SOURCE_DIR}/external/include")
-include_directories("${PROJECT_SOURCE_DIR}/source/libs")
 include_directories("${PROJECT_SOURCE_DIR}/engine")
 
-SET(GCC_COVERAGE_COMPILE_FLAGS "-fprofile-arcs -ftest-coverage")
-SET(GCC_COVERAGE_LINK_FLAGS    "-lgcov")
-
-add_definitions(${GCC_COVERAGE_COMPILE_FLAGS})
-
-SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
-SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
-
-add_executable(${PROJECT_NAME} game.cpp)
-target_link_libraries(${PROJECT_NAME} source engine pthread)
+add_executable(${PROJECT_NAME} App/game.cpp)
+target_link_libraries(${PROJECT_NAME} engine pthread)
