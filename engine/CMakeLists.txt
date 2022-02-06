@@ -3,8 +3,9 @@ include_directories("${PROJECT_SOURCE_DIR}/engine")
 
 add_library(
     engine
-    window/window.hpp
     window/window.cpp
+    texture/texture.cpp
+    texture/texture_manager.cpp
 )
 
 find_library(SDL2 NAMES "SDL2")
