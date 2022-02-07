@@ -12,6 +12,9 @@ public:
     virtual void draw(int x, int y);
     virtual bool resize(int width, int height);
 
+    int getWidth() const { return m_width; }
+    int getHeight() const { return m_height; }
+
 protected:
     Texture() = default;
 

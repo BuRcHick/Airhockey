@@ -1,26 +1,20 @@
 #include "texture_manager.hpp"
 
+TextureManager* TextureManager::m_manager = nullptr;
+
 TextureManager::~TextureManager()
 {
     clear();
 }
 
-TextureManager* TextureManager::createManager(SDL_Renderer* renderer)
+TextureManager* TextureManager::getManager()
 {
-    TextureManager* manager = nullptr;
 
-    if (nullptr == renderer) {
-        return nullptr;
+    if (nullptr == m_manager) {
+        m_manager = new TextureManager();
     }
 
-    manager = new TextureManager();
-    if (nullptr == manager) {
-        return nullptr;
-    }
-
-    manager->m_renderer = renderer;
-
-    return manager;
+    return m_manager;
 }
 
 Texture const* TextureManager::getTextureByID(int textureID)
@@ -47,6 +41,10 @@ bool TextureManager::addTexture(int textureID, Texture* texture)
 bool TextureManager::addTextureByPath(int textureID, const char* path)
 {
     Texture* texture = nullptr;
+
+    if (nullptr == m_renderer) {
+        return false;
+    }
 
     if (m_textures.find(textureID) != m_textures.end() || nullptr == path) {
         return false;
@@ -82,6 +80,18 @@ bool TextureManager::removeTexture(int textureID)
     }
 
     m_textures.erase(it);
+
+    return true;
+}
+
+
+bool TextureManager::setRenderer(SDL_Renderer* renderer)
+{
+    if (nullptr == renderer) {
+        return false;
+    }
+
+    m_renderer = renderer;
 
     return true;
 }

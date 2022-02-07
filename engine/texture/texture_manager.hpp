@@ -9,13 +9,14 @@ class TextureManager {
 public:
     ~TextureManager();
 
-    static TextureManager* createManager(SDL_Renderer* renderer);
+    static TextureManager* getManager();
 
     Texture const* getTextureByID(int textureID);
     bool addTexture(int textureID, Texture* texture);
     bool addTextureByPath(int textureID, const char* path);
     bool drawTextureByID(int textureID, int x, int y);
     bool removeTexture(int textureID);
+    bool setRenderer(SDL_Renderer* renderer);
 
     void clear();
 
@@ -24,6 +25,7 @@ protected:
 
 private:
     SDL_Renderer* m_renderer;
+    static TextureManager* m_manager;
     std::unordered_map<int, Texture*> m_textures;
 };
 
