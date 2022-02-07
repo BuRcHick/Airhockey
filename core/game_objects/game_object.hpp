@@ -4,6 +4,7 @@
 #include "common.hpp"
 #include "vector/vector_2d.hpp"
 #include "hitbox/hitbox_2d.hpp"
+#include "event/event.hpp"
 
 class GameObject {
 public:
@@ -12,7 +13,7 @@ public:
 
     virtual void move(Vector2D& position);
     virtual void draw();
-    virtual void handleEvent() = 0;
+    virtual void handleEvent(Event* event) = 0;
     virtual bool isHit(const GameObject& object);
 
     TexturesID getTexture() const { return m_textureID; }

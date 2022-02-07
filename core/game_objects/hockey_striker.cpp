@@ -24,7 +24,7 @@ bool HockeyStriker::isHit(const GameObject& object)
     return false;
 }
 
-void HockeyStriker::handleEvent()
+void HockeyStriker::handleEvent(Event* event)
 {
     /* TODO */
 }

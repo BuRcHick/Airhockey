@@ -9,7 +9,7 @@ public:
     HockeyStriker();
     virtual ~HockeyStriker() = default;
 
-    virtual void handleEvent() override;
+    virtual void handleEvent(Event* event) override;
     virtual bool isHit(const GameObject& object) override;
 
 private:
