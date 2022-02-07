@@ -61,7 +61,7 @@ Window::~Window()
 Window* Window::create(const char *title)
 {
     Window* wnd = new Window(title);
-    std::uint32_t flags = SDL_WINDOW_HIDDEN;
+    std::uint32_t flags = SDL_WINDOW_SHOWN;
 
     if(0 > SDL_CreateWindowAndRenderer(wnd->m_width, wnd->m_height, flags,
                                        &(wnd->m_wnd), &(wnd->m_rndr))) {
@@ -69,6 +69,8 @@ Window* Window::create(const char *title)
 
         return nullptr;
     }
+
+    SDL_SetWindowTitle(wnd->m_wnd, wnd->m_title.c_str());
 
     return wnd;
 }
