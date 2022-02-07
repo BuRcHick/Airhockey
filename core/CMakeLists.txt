@@ -6,6 +6,7 @@ add_library(
     core
     game_objects/game_object.cpp
     game_objects/physic_object.cpp
+    event/event_manager.cpp
 )
 
 link_directories(${PROJECT_SOURCE_DIR}/engine)
