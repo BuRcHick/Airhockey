@@ -24,13 +24,19 @@ Texture* Texture::create(const char* path, SDL_Renderer* renderer)
     new_texture->m_renderer = renderer;
     new_texture->m_texture = IMG_LoadTexture(new_texture->m_renderer, path);
 
+    if (nullptr == new_texture->m_texture) {
+        delete new_texture;
+
+        return nullptr;
+    }
+
     SDL_QueryTexture(new_texture->m_texture, nullptr, nullptr,
                      &new_texture->m_width, &new_texture->m_height);
 
     return new_texture;
 }
 
-void Texture::draw(int x, int y)
+void Texture::draw(int x, int y, int width, int height)
 {
     if (nullptr == m_texture || nullptr == m_renderer) {
         return;
@@ -43,8 +49,8 @@ void Texture::draw(int x, int y)
     SDL_Rect rect = {
         .x = x,
         .y = y,
-        .w = m_width,
-        .h = m_height
+        .w = width,
+        .h = height
     };
 
     SDL_RenderCopy(m_renderer, m_texture, NULL, &rect);

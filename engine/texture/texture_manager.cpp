@@ -60,14 +60,14 @@ bool TextureManager::addTextureByPath(int textureID, const char* path)
     return true;
 }
 
-bool TextureManager::drawTextureByID(int textureID, int x, int y)
+bool TextureManager::drawTextureByID(int textureID, int x, int y, int width, int height)
 {
     auto it = m_textures.find(textureID);
     if (it == m_textures.end()) {
         return false;
     }
 
-    it->second->draw(x, y);
+    it->second->draw(x, y, width, height);
 
     return true;
 }

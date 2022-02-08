@@ -14,7 +14,7 @@ public:
     Texture const* getTextureByID(int textureID);
     bool addTexture(int textureID, Texture* texture);
     bool addTextureByPath(int textureID, const char* path);
-    bool drawTextureByID(int textureID, int x, int y);
+    bool drawTextureByID(int textureID, int x, int y, int width, int height);
     bool removeTexture(int textureID);
     bool setRenderer(SDL_Renderer* renderer);
 
