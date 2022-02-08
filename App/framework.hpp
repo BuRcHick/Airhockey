@@ -5,8 +5,10 @@
 #include "game_objects/hockey_striker.hpp"
 #include "window/window.hpp"
 
+#include <memory>
+
 #define WIDTH   700
-#define HEIGHT  900
+#define HEIGHT  1100
 
 class Game {
 public:
@@ -26,17 +28,17 @@ protected:
 private:
     Window* m_window;
 
-    GameObject* m_striker_1;
-    GameObject* m_striker_2;
-    GameObject* m_puck;
+    std::shared_ptr<GameObject> m_striker_1;
+    std::shared_ptr<GameObject> m_striker_2;
+    std::shared_ptr<GameObject> m_puck;
 
-    HitBox2D* m_topBorder;
-    HitBox2D* m_buttomBorder;
-    HitBox2D* m_leftBorder;
-    HitBox2D* m_rightBorder;
+    HitBox2D m_topBorder;
+    HitBox2D m_buttomBorder;
+    HitBox2D m_leftBorder;
+    HitBox2D m_rightBorder;
 
-    HitBox2D* m_leftGate;
-    HitBox2D* m_rightGate;
+    HitBox2D m_leftGate;
+    HitBox2D m_rightGate;
 
     static Game* m_game;
 };

@@ -1,4 +1,5 @@
 #include "texture_manager.hpp"
+#include "logger/logger.hpp"
 
 TextureManager* TextureManager::m_manager = nullptr;
 
@@ -21,6 +22,8 @@ Texture const* TextureManager::getTextureByID(int textureID)
 {
     auto it = m_textures.find(textureID);
     if (it == m_textures.end()) {
+        LOG_WARNING("Failed to find texture: textureID = %d\n", textureID);
+
         return nullptr;
     }
 
@@ -30,6 +33,8 @@ Texture const* TextureManager::getTextureByID(int textureID)
 bool TextureManager::addTexture(int textureID, Texture* texture)
 {
     if (m_textures.find(textureID) != m_textures.end() || nullptr == texture) {
+        LOG_WARNING("Failed to add textureID = %d. Texture already exist\n", textureID);
+
         return false;
     }
 
@@ -43,15 +48,21 @@ bool TextureManager::addTextureByPath(int textureID, const char* path)
     Texture* texture = nullptr;
 
     if (nullptr == m_renderer) {
+        LOG_WARNING("Renderer is not initialized\n");
+
         return false;
     }
 
     if (m_textures.find(textureID) != m_textures.end() || nullptr == path) {
+        LOG_WARNING("Invalid input: textureID = %d, path = %p\n", textureID, path);
+
         return false;
     }
 
     texture = Texture::create(path, m_renderer);
     if (nullptr == texture) {
+        LOG_ERROR("Failed to create texture\n");
+
         return false;
     }
 
@@ -64,6 +75,8 @@ bool TextureManager::drawTextureByID(int textureID, int x, int y, int width, int
 {
     auto it = m_textures.find(textureID);
     if (it == m_textures.end()) {
+        LOG_WARNING("Failed to find texture: textureID = %d\n", textureID);
+
         return false;
     }
 
@@ -76,6 +89,8 @@ bool TextureManager::removeTexture(int textureID)
 {
     auto it = m_textures.find(textureID);
     if (it == m_textures.end()) {
+        LOG_WARNING("Failed to find texture: textureID = %d\n", textureID);
+
         return false;
     }
 
@@ -88,6 +103,8 @@ bool TextureManager::removeTexture(int textureID)
 bool TextureManager::setRenderer(SDL_Renderer* renderer)
 {
     if (nullptr == renderer) {
+        LOG_WARNING("Renderer has been set already\n");
+
         return false;
     }
 

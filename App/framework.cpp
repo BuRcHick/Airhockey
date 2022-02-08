@@ -10,6 +10,12 @@ Game* Game::m_game = nullptr;
 bool isRunning = false;
 
 Game::Game()
+    :m_buttomBorder(0, 0, 0, 0),
+    m_topBorder(0, 0, 0, 0),
+    m_leftBorder(0, 0, 0, 0),
+    m_rightBorder(0, 0, 0, 0),
+    m_leftGate(0, 0, 0, 0),
+    m_rightGate(0, 0, 0, 0)
 {
     m_window = Window::create("Big Dick Game");
     m_window->resize(WIDTH, HEIGHT);
@@ -26,12 +32,14 @@ Game* Game::getGame()
 
 bool Game::init()
 {
-    m_striker_1 = new HockeyStriker();
-    m_striker_2 = new HockeyStriker();
-    m_puck = new HockeyPuck();
+    m_striker_1 = std::make_shared<HockeyStriker>();
+    m_striker_2 = std::make_shared<HockeyStriker>();
+    m_puck = std::make_shared<HockeyPuck>();
 
     m_striker_1->resize(100, 100);
     m_striker_1->move(Vector2D(10, 0));
+
+    EventManager::getManager()->subscribeOnEvent(std::make_pair(EventType::SDL_Event, SDL_MOUSEMOTION), m_striker_1);
 
     return true;
 }
@@ -45,8 +53,6 @@ void Game::draw()
 
     texture_manager->drawTextureByID((int)TexturesID::HockeyBackground, 0, 0, WIDTH, HEIGHT);
     m_striker_1->draw();
-    m_striker_2->draw();
-    m_puck->draw();
 
     SDL_RenderPresent(renderer);
 

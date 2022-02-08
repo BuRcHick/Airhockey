@@ -1,5 +1,6 @@
 #include "game_object.hpp"
 #include "texture/texture_manager.hpp"
+#include "logger/logger.hpp"
 
 GameObject::GameObject(TexturesID textureID, float x, float y)
     :m_textureID(textureID), m_position(x, y), m_hitBox(0, 0, 0, 0)
@@ -31,6 +32,8 @@ void GameObject::move(Vector2D position)
 bool GameObject::resize(int width, int height)
 {
     if (width < 0 || height < 0) {
+        LOG_WARNING("Invalid input: width = %d, height = %d\n", width, height);
+
         return false;
     }
 

@@ -1,5 +1,7 @@
 #include "window.hpp"
 
+#include "logger/logger.hpp"
+
 #include <cstdint>
 #include <cstdio>
 
@@ -11,6 +13,9 @@ Window::Window()
     m_width = DEFAULT_WIDTH;
     m_height = DEFAULT_HEIGHT;
     m_title = DEFAULT_TITLE;
+
+    LOG_DEBUG("Window succesfully created\n");
+
 }
 
 Window::Window(const char *title)
@@ -55,7 +60,7 @@ Window::~Window()
     SDL_DestroyRenderer(m_rndr);
     SDL_DestroyWindow(m_wnd);
 
-    printf("Window delted successfuly!\n");
+    LOG_DEBUG("Winow deleted succesfully\n");
 }
 
 Window* Window::create(const char *title)
@@ -65,7 +70,7 @@ Window* Window::create(const char *title)
 
     if(0 > SDL_CreateWindowAndRenderer(wnd->m_width, wnd->m_height, flags,
                                        &(wnd->m_wnd), &(wnd->m_rndr))) {
-        perror("Error! The window creating failed...");
+        LOG_ERROR("Error! The window creating failed...\n");
 
         return nullptr;
     }
@@ -94,7 +99,7 @@ void Window::update()
 bool Window::changeTitle(const char *title)
 {
     if (nullptr == title) {
-        perror("Invalid input: title = nullptr");
+        LOG_ERROR("Invalid input: title = %s\n", title);
 
         return false;
     }
@@ -109,7 +114,7 @@ bool Window::changeTitle(const char *title)
 bool Window::resize(int w, int h)
 {
     if (w < 0 || h < 0) {
-        perror("Invalid input: w or h < 0");
+        LOG_ERROR("Invalid input: w = %d, h = %d\n", w, h);
 
         return false;
     }
@@ -125,7 +130,7 @@ bool Window::resize(int w, int h)
 bool Window::setPos(int x, int y)
 {
     if (x < 0 || y < 0) {
-        perror("Invalid input: x or y < 0");
+        LOG_ERROR("Invalid input: x = %d, y = %d\n", x, y);
 
         return false;
     }

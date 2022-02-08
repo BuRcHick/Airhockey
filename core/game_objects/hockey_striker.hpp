@@ -17,6 +17,8 @@ public:
     const HitBox2D& getBottomHitBox() const { return m_buttomHitBox; }
 
 private:
+    void handleSDLEvent(SDL_Event& event);
+
     HitBox2D m_topHitBox;
     HitBox2D m_middleHitBox;
     HitBox2D m_buttomHitBox;

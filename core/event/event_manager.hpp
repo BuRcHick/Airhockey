@@ -19,7 +19,7 @@ public:
     void run();
     void stop();
 
-    bool isRunning() const { return m_isRunning; }
+    bool isRunning() { return m_isRunning; }
 
     bool subscribeOnEvent(SubscriptionEventType type, std::shared_ptr<GameObject> object);
 

@@ -24,7 +24,26 @@ bool HockeyStriker::isHit(const GameObject& object)
     return false;
 }
 
+void HockeyStriker::handleSDLEvent(SDL_Event& event)
+{
+    switch (event.type) {
+        case SDL_MOUSEMOTION:
+            move(Vector2D(event.motion.x, event.motion.y));
+
+            break;
+        default:
+            break;
+    }
+}
+
 void HockeyStriker::handleEvent(Event* event)
 {
-    /* TODO */
+    switch (event->type) {
+        case EventType::SDL_Event:
+            handleSDLEvent(event->data.sdl_event);
+
+            break;
+        default:
+            break;
+    }
 }

@@ -1,8 +1,11 @@
 #include "event_manager.hpp"
+#include "logger/logger.hpp"
 
 #include <thread>
+#include <mutex>
 
 EventManager* EventManager::m_manager = nullptr;
+std::mutex g_mutex;
 
 EventManager::EventManager()
 {
@@ -28,18 +31,32 @@ void EventManager::pushEvent(std::unique_ptr<Event> event)
 {
     EventManager* manager = getManager();
 
+    g_mutex.lock();
     manager->m_eventsQueue.push(std::move(event));
+    g_mutex.unlock();
 
 }
 
 std::unique_ptr<Event> EventManager::popEvent()
 {
-    return std::move(m_eventsQueue.back());
+    std::unique_ptr<Event> event;
+
+    if (m_eventsQueue.empty()) {
+        return nullptr;
+    }
+
+    g_mutex.lock();
+    event = std::move(m_eventsQueue.back());
+    g_mutex.unlock();
+
+    return std::move(event);
 }
 
 bool EventManager::subscribeOnEvent(SubscriptionEventType type, std::shared_ptr<GameObject> object)
 {
     if (m_subscriptions.find(type) != m_subscriptions.end()) {
+        LOG_WARNING("Cannot find: type = {%d, %d}\n", type.first, type.second);
+
         return false;
     }
 
@@ -75,6 +92,12 @@ void EventManager::handleEvents()
 
     while (manager->isRunning()) {
         event = manager->popEvent();
+        if (!event) {
+            continue;
+        }
+
+        LOG_DEBUG("Recived: event = %d\n", event->type);
+
         event_ptr = event.get();
 
         switch (event.get()->type) {
@@ -109,7 +132,6 @@ void EventManager::handleEvents()
 
 void EventManager::stop()
 {
-    EventManager* manager = getManager();
     SDL_Event sdl_event = {
         .type = SDL_QUIT
     };
@@ -120,15 +142,16 @@ void EventManager::stop()
     event->type = EventType::SDL_Event;
     event->data.sdl_event = sdl_event;
 
-    manager->pushEvent(std::move(event));
+    pushEvent(std::move(event));
 }
 
 void EventManager::run()
 {
-    if (false == EventManager::getManager()->isRunning()) {
+    if (false == m_isRunning) {
+        m_isRunning = true;
+
         std::thread thread(EventManager::handleEvents);
         thread.detach();
-        EventManager::getManager()->m_isRunning = true;
     }
 
 }

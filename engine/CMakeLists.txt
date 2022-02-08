@@ -3,11 +3,11 @@ include_directories("${PROJECT_SOURCE_DIR}/engine")
 
 add_library(
     engine
+    logger/logger.cpp
     window/window.cpp
     texture/texture.cpp
     texture/texture_manager.cpp
     hitbox/hitbox_2d.cpp
-    logger/logger.cpp
 )
 
 find_library(SDL2 NAMES "SDL2")
