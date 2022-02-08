@@ -12,6 +12,10 @@ public:
     virtual void handleEvent(Event* event) override;
     virtual bool isHit(const GameObject& object) override;
 
+    const HitBox2D& getTopHitBox() const { return m_topHitBox; }
+    const HitBox2D& getMiddleHitBox() const { return m_middleHitBox; }
+    const HitBox2D& getBottomHitBox() const { return m_buttomHitBox; }
+
 private:
     HitBox2D m_topHitBox;
     HitBox2D m_middleHitBox;

@@ -8,7 +8,7 @@ HockeyStriker::HockeyStriker()
     m_buttomHitBox(0, 0, 0, 0)
 {
     TextureManager* manager = TextureManager::getManager();
-    Texture const* texture = manager->getTextureByID(TexturesID::HockeyStriker);
+    Texture const* texture = manager->getTextureByID((int)TexturesID::HockeyStriker);
     if (nullptr != texture) {
         int heigth = texture->getHeight();
         int width = texture->getWidth();
