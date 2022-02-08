@@ -60,7 +60,15 @@ bool EventManager::subscribeOnEvent(SubscriptionEventType type, std::shared_ptr<
         return false;
     }
 
-    m_subscriptions[type] = object;
+    for (auto subscriber : m_subscriptions[type]) {
+        if (object == subscriber) {
+            LOG_WARNING("Object already subpscribed\n");
+
+            return false;
+        }
+    }
+
+    m_subscriptions[type].push_back(object);
 
     return true;
 }
@@ -76,6 +84,11 @@ bool isSubscribed(Event const* event, const SubscriptionEventType& type)
 
             break;
         case EventType::GameEvent:
+            if (EventType::GameEvent == event->type
+                && type.second == event->data.game_event.type) {
+                return true;
+            }
+
             break;
         default:
             return false;
@@ -96,8 +109,6 @@ void EventManager::handleEvents()
             continue;
         }
 
-        LOG_DEBUG("Recived: event = %d\n", event->type);
-
         event_ptr = event.get();
 
         switch (event.get()->type) {
@@ -110,7 +121,9 @@ void EventManager::handleEvents()
 
                 for (auto subscrbsion : manager->m_subscriptions) {
                     if (isSubscribed(event_ptr, subscrbsion.first)) {
-                        subscrbsion.second.get()->handleEvent(event.get());
+                        for (auto subscriber : subscrbsion.second) {
+                            subscriber->handleEvent(event.get());
+                        }
                     }
                 }
 
@@ -119,7 +132,9 @@ void EventManager::handleEvents()
             case EventType::GameEvent:
                 for (auto subscrbsion : manager->m_subscriptions) {
                     if (isSubscribed(event_ptr, subscrbsion.first)) {
-                        subscrbsion.second.get()->handleEvent(event.get());
+                        for (auto subscriber : subscrbsion.second) {
+                            subscriber->handleEvent(event.get());
+                        }
                     }
                 }
 

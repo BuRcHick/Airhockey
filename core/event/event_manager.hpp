@@ -1,13 +1,14 @@
 #ifndef __EVENT_MANAGER_HPP__
 #define __EVENT_MANAGER_HPP__
 
-#include "event/event.hpp"
+#include "event.hpp"
 #include "game_objects/game_object.hpp"
 
 #include <cstdint>
 #include <map>
 #include <memory>
 #include <queue>
+#include <vector>
 
 using SubscriptionEventType = std::pair<EventType, std::uint32_t>;
 
@@ -34,7 +35,7 @@ protected:
 private:
     static EventManager* m_manager;
     std::queue<std::unique_ptr<Event>> m_eventsQueue;
-    std::map<SubscriptionEventType, std::shared_ptr<GameObject>> m_subscriptions;
+    std::map<SubscriptionEventType, std::vector<std::shared_ptr<GameObject>>> m_subscriptions;
     bool m_isRunning;
 };
 
