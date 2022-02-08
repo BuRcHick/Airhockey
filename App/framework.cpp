@@ -3,8 +3,10 @@
 #include "framework.hpp"
 #include "texture/texture_manager.hpp"
 #include "game_objects/hockey_striker.hpp"
+#include "event/event_manager.hpp"
 
 Game* Game::m_game = nullptr;
+bool isRunning = false;
 
 Game::Game()
 {
@@ -26,21 +28,48 @@ bool AirHockey::init()
         return false;
     }
 
+    isRunning = true;
+
     return true;
 }
 
 void AirHockey::handleEvent()
 {
-    /* TODO */
+    SDL_Event sdl_event;
+    std::unique_ptr<Event> event;
+
+    while (SDL_PollEvent(&sdl_event)) {
+        switch (sdl_event.type) {
+            case SDL_QUIT:
+                AirHockey::close();
+
+                isRunning = false;
+
+                break;
+            default:
+                event = std::make_unique<Event>();
+                event->type = EventType::SDL_Event;
+                event->data.sdl_event = sdl_event;
+
+                EventManager::pushEvent(std::move(event));
+
+                break;
+        }
+    }
 }
 
 bool AirHockey::update()
 {
-    /* TODO */
-    return false;
+    Game* game = Game::getGame();
+
+    game->m_window->show();
+    game->m_window->update();
+
+    return isRunning;
 }
 
 void AirHockey::close()
 {
+    EventManager::getManager()->stop();
     SDL_Quit();
 }
