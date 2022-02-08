@@ -1,8 +1,5 @@
 #include "framework.hpp"
 
-#define WIDTH   700
-#define HEIGHT  900
-
 int main(){
     bool isRunning = false;
 

@@ -6,6 +6,8 @@ add_library(
     core
     game_objects/game_object.cpp
     game_objects/physic_object.cpp
+    game_objects/hockey_striker.cpp
+    game_objects/hockey_puck.cpp
     event/event_manager.cpp
 )
 

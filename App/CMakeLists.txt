@@ -16,3 +16,5 @@ add_executable(${PROJECT_NAME} game.cpp)
 link_libraries(framework core engine)
 
 target_link_libraries(${PROJECT_NAME} framework core engine ${SDL2} pthread)
+
+target_compile_definitions(framework PUBLIC ASSETS_FOLDER="${PROJECT_SOURCE_DIR}/Assets")
