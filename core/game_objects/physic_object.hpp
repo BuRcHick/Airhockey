@@ -8,9 +8,9 @@ public:
     PhysicObject();
     virtual ~PhysicObject() = default;
 
-    virtual void move(Vector2D& position) override;
-    void setVelocity(Vector2D& velocity);
-    void setAngle(Vector2D& angle);
+    virtual void move(Vector2D position) override;
+    void setVelocity(Vector2D velocity);
+    void setAngle(Vector2D angle);
 
 private:
     Vector2D m_velocity;

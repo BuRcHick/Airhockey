@@ -5,7 +5,7 @@ PhysicObject::PhysicObject()
 {
 }
 
-void PhysicObject::move(Vector2D& position)
+void PhysicObject::move(Vector2D position)
 {
     position += m_velocity;
 
@@ -16,12 +16,12 @@ void PhysicObject::move(Vector2D& position)
     GameObject::move(position);
 }
 
-void PhysicObject::setVelocity(Vector2D& velocity)
+void PhysicObject::setVelocity(Vector2D velocity)
 {
     m_velocity = velocity;
 }
 
-void PhysicObject::setAngle(Vector2D& angle)
+void PhysicObject::setAngle(Vector2D angle)
 {
     m_angle = angle;
 }

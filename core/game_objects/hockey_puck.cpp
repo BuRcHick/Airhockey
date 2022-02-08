@@ -11,16 +11,15 @@ bool HockeyPuck::isHit(const GameObject& object)
 {
     bool isHit = false;
     if (TexturesID::HockeyStriker != object.getTexture()) {
-        return GameObject::isHit(object);
-    }
-
-    HockeyStriker const* striker = dynamic_cast<HockeyStriker const*>(&object);
-
-    if (GameObject::isHit(striker->getTopHitBox()) || GameObject::isHit(striker->getBottomHitBox())) {
-        /* TODO: Need to change diraction */
-        isHit = true;
+        isHit = GameObject::isHit(object);
     } else {
-        isHit = GameObject::isHit(striker->getMiddleHitBox());
+        HockeyStriker const* striker = dynamic_cast<HockeyStriker const*>(&object);
+        if (GameObject::isHit(striker->getTopHitBox()) || GameObject::isHit(striker->getBottomHitBox())) {
+            /* TODO: Need to change diraction */
+            isHit = true;
+        } else {
+            isHit = GameObject::isHit(striker->getMiddleHitBox());
+        }
     }
 
     if (isHit) {

@@ -6,7 +6,7 @@
 class HockeyPuck : virtual public PhysicObject {
 public:
     HockeyPuck();
-    ~HockeyPuck();
+    virtual ~HockeyPuck() = default;
 
     virtual bool isHit(const GameObject& object) override;
     virtual void handleEvent(Event* event) override;

@@ -11,11 +11,13 @@ public:
     GameObject(TexturesID textureID, float x, float y);
     virtual ~GameObject() = default;
 
-    virtual void move(Vector2D& position);
+    virtual void move(Vector2D position);
     virtual void draw();
     virtual void handleEvent(Event* event) = 0;
     virtual bool isHit(const GameObject& object);
     virtual bool isHit(const HitBox2D& hitbox);
+
+    bool resize(int width, int height);
 
     TexturesID getTexture() const { return m_textureID; }
     Vector2D getPosition() const { return m_position; }
@@ -24,6 +26,7 @@ private:
     Vector2D m_position;
     TexturesID m_textureID;
     HitBox2D m_hitBox;
+    int m_width, m_height;
 };
 
 #endif /* __GAME_OBJECT_HPP__ */
