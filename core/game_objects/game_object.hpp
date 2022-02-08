@@ -15,6 +15,7 @@ public:
     virtual void draw();
     virtual void handleEvent(Event* event) = 0;
     virtual bool isHit(const GameObject& object);
+    virtual bool isHit(const HitBox2D& hitbox);
 
     TexturesID getTexture() const { return m_textureID; }
     Vector2D getPosition() const { return m_position; }

@@ -1,7 +1,7 @@
 #ifndef __COMMON_HPP__
 #define __COMMON_HPP__
 
-enum TexturesID {
+enum class TexturesID {
     None = 0,
     HockeyStriker,
     HockeyPuck,
