@@ -10,3 +10,9 @@
 	path = external/libs/SDL2_ttf
     url = https://github.com/libsdl-org/SDL_ttf.git
     ignore = dirty
+[submodule "external/parser/cxml"]
+	path = external/parser/cxml
+	url = https://github.com/ziord/cxml.git
+[submodule "external/libs/parser/cxml"]
+	path = external/libs/parser/cxml
+	url = https://github.com/ziord/cxml.git
