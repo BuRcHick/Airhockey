@@ -2,10 +2,11 @@
 #include "logger/logger.hpp"
 
 #include <thread>
-#include <mutex>
+#include <chrono>
+
+std::chrono::milliseconds interval(100);
 
 EventManager* EventManager::m_manager = nullptr;
-std::mutex g_mutex;
 
 EventManager::EventManager()
 {
@@ -27,29 +28,25 @@ EventManager* EventManager::getManager()
     return m_manager;
 }
 
-void EventManager::pushEvent(std::unique_ptr<Event> event)
+void EventManager::pushEvent(std::shared_ptr<Event> event)
 {
     EventManager* manager = getManager();
 
-    g_mutex.lock();
-    manager->m_eventsQueue.push(std::move(event));
-    g_mutex.unlock();
-
+    std::lock_guard<std::mutex> lk(manager->m_mutex);
+    manager->m_eventsQueue.push(event);
+    manager->m_condVariable.notify_one();
 }
 
-std::unique_ptr<Event> EventManager::popEvent()
+std::shared_ptr<Event> EventManager::popEvent()
 {
-    std::unique_ptr<Event> event;
+    std::shared_ptr<Event> event = nullptr;
 
-    if (m_eventsQueue.empty()) {
-        return nullptr;
-    }
+    std::unique_lock<std::mutex> lk(m_mutex);
+    m_condVariable.wait(lk, [this]{ return !m_eventsQueue.empty(); });
+    event = m_eventsQueue.front();
+    m_eventsQueue.pop();
 
-    g_mutex.lock();
-    event = std::move(m_eventsQueue.back());
-    g_mutex.unlock();
-
-    return std::move(event);
+    return event;
 }
 
 bool EventManager::subscribeOnEvent(SubscriptionEventType type, std::shared_ptr<GameObject> object)
@@ -97,51 +94,53 @@ bool isSubscribed(Event const* event, const SubscriptionEventType& type)
     return false;
 }
 
+void processSubscriptions(SubscriptionMap const& map, std::shared_ptr<Event> event)
+{
+    for (auto subscrbsion : map) {
+        if (isSubscribed(event.get(), subscrbsion.first)) {
+            for (auto subscriber : subscrbsion.second) {
+                subscriber->handleEvent(event.get());
+            }
+        }
+    }
+
+}
+
 void EventManager::handleEvents()
 {
     EventManager* manager = getManager();
-    std::unique_ptr<Event> event;
-    Event* event_ptr = nullptr;
+    std::shared_ptr<Event> event = nullptr;
+
+    event = manager->popEvent();
+
+    switch (event->type) {
+        case EventType::SDL_Event: {
+            SDL_Event* sdl_event = &event->data.sdl_event;
+
+            if (SDL_QUIT == sdl_event->type) {
+                manager->m_isRunning = false;
+            }
+
+            processSubscriptions(manager->m_subscriptions, event);
+
+            break;
+        }
+        case EventType::GameEvent:
+            processSubscriptions(manager->m_subscriptions, event);
+
+            break;
+        default:
+            break;
+    }
+}
+
+void EventManager::task()
+{
+    EventManager* manager = getManager();
+    std::this_thread::sleep_for(interval);
 
     while (manager->isRunning()) {
-        event = manager->popEvent();
-        if (!event) {
-            continue;
-        }
-
-        event_ptr = event.get();
-
-        switch (event.get()->type) {
-            case EventType::SDL_Event: {
-                SDL_Event* sdl_event = &event_ptr->data.sdl_event;
-
-                if (SDL_QUIT == sdl_event->type) {
-                    manager->m_isRunning = false;
-                }
-
-                for (auto subscrbsion : manager->m_subscriptions) {
-                    if (isSubscribed(event_ptr, subscrbsion.first)) {
-                        for (auto subscriber : subscrbsion.second) {
-                            subscriber->handleEvent(event.get());
-                        }
-                    }
-                }
-
-                break;
-            }
-            case EventType::GameEvent:
-                for (auto subscrbsion : manager->m_subscriptions) {
-                    if (isSubscribed(event_ptr, subscrbsion.first)) {
-                        for (auto subscriber : subscrbsion.second) {
-                            subscriber->handleEvent(event.get());
-                        }
-                    }
-                }
-
-                break;
-            default:
-                break;
-        }
+        handleEvents();
     }
 }
 
@@ -150,23 +149,19 @@ void EventManager::stop()
     SDL_Event sdl_event = {
         .type = SDL_QUIT
     };
-    std::unique_ptr<Event> event;
-
-    event = std::make_unique<Event>();
+    std::shared_ptr<Event> event = std::make_shared<Event>();
 
     event->type = EventType::SDL_Event;
     event->data.sdl_event = sdl_event;
 
-    pushEvent(std::move(event));
+    pushEvent(event);
 }
 
 void EventManager::run()
 {
     if (false == m_isRunning) {
         m_isRunning = true;
-
-        std::thread thread(EventManager::handleEvents);
+        std::thread thread(EventManager::task);
         thread.detach();
     }
-
 }

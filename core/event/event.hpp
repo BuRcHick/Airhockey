@@ -3,6 +3,7 @@
 
 #include "SDL2/SDL_events.h"
 #include "game_event.hpp"
+#include "logger/logger.hpp"
 
 enum class EventType {
     SDL_Event,
@@ -16,6 +17,9 @@ struct Event {
     } data;
 
     EventType type;
+
+    ~Event() {
+    }
 };
 
 #endif /* __EVENT_HPP__ */
