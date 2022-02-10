@@ -10,18 +10,6 @@
 	path = external/libs/SDL2_ttf
     url = https://github.com/libsdl-org/SDL_ttf.git
     ignore = dirty
-[submodule "external/parser/cxml"]
-	path = external/parser/cxml
-	url = https://github.com/ziord/cxml.git
-[submodule "external/libs/parser/cxml"]
-	path = external/libs/parser/cxml
-	url = https://github.com/ziord/cxml.git
-[submodule "external/parser/xml"]
-	path = external/parser/xml
-	url = https://github.com/leethomason/tinyxml2.git
-[submodule "external/parser/libs/xml"]
-	path = external/parser/libs/xml
-	url = https://github.com/leethomason/tinyxml2.git
 [submodule "external/libs/xml"]
 	path = external/libs/xml
 	url = https://github.com/leethomason/tinyxml2.git
