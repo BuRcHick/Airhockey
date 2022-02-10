@@ -85,6 +85,22 @@ bool TextureManager::drawTextureByID(int textureID, int x, int y, int width, int
     return true;
 }
 
+bool TextureManager::drawRectangle(int x, int y, int width, int height)
+{
+    SDL_Rect rect = {
+        .x = x,
+        .y = y,
+        .w = width,
+        .h = height
+    };
+
+    SDL_SetRenderDrawColor(m_renderer, 0, 255, 6, 1);
+    SDL_RenderDrawRect(m_renderer, &rect);
+
+    return false;
+
+}
+
 bool TextureManager::removeTexture(int textureID)
 {
     auto it = m_textures.find(textureID);
