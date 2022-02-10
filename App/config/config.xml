@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Config>
+    <width> 500 </width>
+    <height> 800 </height>
+
+    <Scene>
+        <!-- ===================Borders=================== -->
+        <Border type="top">
+            <height> 20 </height>
+        </Border>
+        <Border type="bottom">
+            <height> 20 </height>
+        </Border>
+        <Border type="left">
+            <width> 20 </width>
+        </Border>
+        <Border type="right">
+            <width> 20 </width>
+        </Border>
+        <!-- ===================GameObjects=================== -->
+        <GameObject type="HockeyStriker">
+            <width> 70 </width>
+            <height> 70 </height>
+        </GameObject>
+        <GameObject type="HockeyPuck">
+            <width> 60 </width>
+            <height> 60 </height>
+        </GameObject>
+    </Scene>
+</Config>
