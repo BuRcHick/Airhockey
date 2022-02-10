@@ -12,3 +12,4 @@ export SDL2_libs="${SDL2}/build/.libs"
 export SDL2_image_libs="${SDL2_image}/.libs"
 export SDL2_ttf_libs="${SDL2_ttf}/.libs"
 
+export XML_PARSER="${PROJECT_ROOT}/external/libs/parser/cxml"

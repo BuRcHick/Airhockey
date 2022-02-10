@@ -16,4 +16,8 @@ find_library(SDL2_ttf NAMES "SDL2_ttf")
 
 message("SDL libraries ${SDL2} ${SDL2_image} ${SDL2_ttf}")
 
-target_link_libraries(engine ${SDL2} ${SDL2_image} ${SDL2_ttf})
+find_library(CXML cxml)
+
+message("CXML libraries ${CXML}")
+
+target_link_libraries(engine ${SDL2} ${SDL2_image} ${SDL2_ttf} ${CXML})
