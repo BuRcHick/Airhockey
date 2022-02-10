@@ -10,6 +10,11 @@ public:
 
     bool isHit(const HitBox2D& hitBox);
 
+    float getX() const { return m_x; }
+    float getY() const { return m_y; }
+    float getWidth() const { return m_width; }
+    float getHeight() const { return m_height; }
+
 private:
     float m_x, m_y, m_width, m_height;
 };
