@@ -8,7 +8,7 @@ ConfigParser::ConfigParser()
 {
 }
 
-bool parseBordersParams(tinyxml2::XMLElement* element, Config& config, Config::Border& border)
+bool parseSizeParams(tinyxml2::XMLElement* element, Config& config, Config::Size& border)
 {
     int width = config.global.width;
     int height = config.global.height;
@@ -31,7 +31,7 @@ bool parseBordersParams(tinyxml2::XMLElement* element, Config& config, Config::B
     if (nullptr == element) {
         border.height = height;
 
-        return false;
+        return true;
     }
 
     if (0 == strcmp("height", element->Name())) {
@@ -47,6 +47,7 @@ bool parseBorders(tinyxml2::XMLElement* element, Config& config)
 {
     int width = config.global.width;
     int height = config.global.height;
+    bool result = true;
 
     if (nullptr == element) {
         LOG_WARNING("Invalid input: element = %p\n", element);
@@ -55,36 +56,61 @@ bool parseBorders(tinyxml2::XMLElement* element, Config& config)
     }
 
     if (0 == strcmp("top", element->Attribute("type"))) {
-        parseBordersParams(element, config, config.scene.topBorder);
+        result &= parseSizeParams(element, config, config.scene.topBorder);
     } else if (0 == strcmp("bottom", element->Attribute("type"))) {
-        parseBordersParams(element, config, config.scene.bottomBorder);
+        result &= parseSizeParams(element, config, config.scene.bottomBorder);
     } else if (0 == strcmp("left", element->Attribute("type"))) {
-        parseBordersParams(element, config, config.scene.leftBorder);
+        result &= parseSizeParams(element, config, config.scene.leftBorder);
     } else if (0 == strcmp("right", element->Attribute("type"))) {
-        parseBordersParams(element, config, config.scene.rightBorder);
+        result &= parseSizeParams(element, config, config.scene.rightBorder);
     }
 
-    return true;
+    return result;
 }
 
-bool parseScene(tinyxml2::XMLElement* element, Config& config)
+bool parseGameObjects(tinyxml2::XMLElement* element, Config& config)
 {
+    int width = config.global.width;
+    int height = config.global.height;
+    bool result = true;
+
     if (nullptr == element) {
         LOG_WARNING("Invalid input: element = %p\n", element);
 
         return false;
     }
 
-    while (element) {
+    if (0 == strcmp("HockeyPuck", element->Attribute("type"))) {
+        result &= parseSizeParams(element, config, config.scene.hockeyPuck);
+    } else if (0 == strcmp("HockeyStriker", element->Attribute("type"))) {
+        result &= parseSizeParams(element, config, config.scene.hockeyStriker);
+    }
+
+    return result;
+}
+
+bool parseScene(tinyxml2::XMLElement* element, Config& config)
+{
+    bool result = true;
+
+    if (nullptr == element) {
+        LOG_WARNING("Invalid input: element = %p\n", element);
+
+        return false;
+    }
+
+    while (element && result) {
+        LOG_DEBUG("Element: %s\n", element->Name());
         if (0 == strcmp("Border", element->Name())) {
-            LOG_DEBUG("BORDER: %s\n", element->Name());
-            parseBorders(element, config);
+            result &= parseBorders(element, config);
+        } else if (0 == strcmp("GameObject", element->Name())) {
+            result &= parseGameObjects(element, config);
         }
 
         element = element->NextSiblingElement();
     }
 
-    return true;
+    return result;
 }
 
 bool ConfigParser::parse()

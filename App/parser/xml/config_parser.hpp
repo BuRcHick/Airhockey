@@ -10,16 +10,18 @@ struct Config {
         int width;
     } global;
 
-    struct Border {
+    struct Size {
         int width;
         int height;
     };
 
     struct Scene {
-        Border topBorder;
-        Border bottomBorder;
-        Border leftBorder;
-        Border rightBorder;
+        Size topBorder;
+        Size bottomBorder;
+        Size leftBorder;
+        Size rightBorder;
+        Size hockeyPuck;
+        Size hockeyStriker;
     } scene;
 };
 
