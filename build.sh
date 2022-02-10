@@ -30,26 +30,23 @@ then
 fi
 echo "$SDL2_ttf succesfully configured"
 
-if [ ! -d "$XML_PARSER/build" ]
+if [ ! -f "$XML/tinyxml2.o" ]
 then
-    echo "Start configuring $XML_PARSER"
-    cd $XML_PARSER
-    mkdir $XML_PARSER/build
-    cd $XML_PARSER/build
-    cmake ../ -DCXML_BUILD_SHARED_LIB=ON
+    echo "Start configuring $XML"
+    cd $XML
     make clean all
     cd $PROJECT_ROOT
 fi
-echo "$XML_PARSER succesfully configured"
+echo "$XML succesfully configured"
 
 if [ ! -d "$PROJECT_ROOT/external/include" ]
 then
     mkdir -p "$PROJECT_ROOT/external/include/SDL2"
-    mkdir -p "$PROJECT_ROOT/external/include/parser"
+    mkdir -p "$PROJECT_ROOT/external/include/xml"
     ln -s ${SDL2}/include/*\.h external/include/SDL2/
     ln -s ${SDL2_image}/*\.h external/include/SDL2/
     ln -s ${SDL2_ttf}/*\.h external/include/SDL2/
-    ln -s ${XML_PARSER}/include/* external/include/parser
+    ln -s ${XML}/*\.h external/include/xml/
 fi
 
 if [ ! -d "$PROJECT_ROOT/build" ]
@@ -57,7 +54,7 @@ then
     mkdir build
     cd $PROJECT_ROOT/build
     cmake ../ -DCMAKE_EXPORT_COMPILE_COMMANDS=1                                                                         \
-        -DCMAKE_LIBRARY_PATH="$SDL2/build/.libs;$SDL2_image/.libs;$SDL2_ttf/.libs;$XML_PARSER/build"                                      \
+        -DCMAKE_LIBRARY_PATH="$SDL2/build/.libs;$SDL2_image/.libs;$SDL2_ttf/.libs;$XML"                                 \
         -DCMAKE_BUILD_TYPE=Debug
 fi
 

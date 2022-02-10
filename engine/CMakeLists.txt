@@ -8,6 +8,7 @@ add_library(
     texture/texture.cpp
     texture/texture_manager.cpp
     hitbox/hitbox_2d.cpp
+    xml/xml_loader.cpp
 )
 
 find_library(SDL2 NAMES "SDL2")
@@ -16,8 +17,8 @@ find_library(SDL2_ttf NAMES "SDL2_ttf")
 
 message("SDL libraries ${SDL2} ${SDL2_image} ${SDL2_ttf}")
 
-find_library(CXML cxml)
+find_library(XML tinyxml2)
 
-message("CXML libraries ${CXML}")
+message("XML libraries ${XML}")
 
-target_link_libraries(engine ${SDL2} ${SDL2_image} ${SDL2_ttf} ${CXML})
+target_link_libraries(engine ${SDL2} ${SDL2_image} ${SDL2_ttf} ${XML})
