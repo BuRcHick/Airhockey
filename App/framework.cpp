@@ -111,11 +111,123 @@ void Game::draw()
 
     SDL_RenderClear(renderer);
 
-    texture_manager->drawTextureByID((int)TexturesID::HockeyBackground, 0, 0, WIDTH, HEIGHT);
+    texture_manager->drawTextureByID((int)TexturesID::HockeyBackground, 0, 0,
+                                     m_config.global.width,
+                                     m_config.global.height);
     m_striker_1->draw();
+    m_puck->draw();
+
+    texture_manager->drawRectangle(m_topBorder.getX(),
+                                   m_topBorder.getY(),
+                                   m_topBorder.getWidth(),
+                                   m_topBorder.getHeight());
+
+    texture_manager->drawRectangle(m_buttomBorder.getX(),
+                                   m_buttomBorder.getY(),
+                                   m_buttomBorder.getWidth(),
+                                   m_buttomBorder.getHeight());
+
+    texture_manager->drawRectangle(m_rightBorder.getX(),
+                                   m_rightBorder.getY(),
+                                   m_rightBorder.getWidth(),
+                                   m_rightBorder.getHeight());
+
+    texture_manager->drawRectangle(m_leftBorder.getX(),
+                                   m_leftBorder.getY(),
+                                   m_leftBorder.getWidth(),
+                                   m_leftBorder.getHeight());
 
     SDL_RenderPresent(renderer);
 
+}
+
+void Game::keepObjectInBorder(std::shared_ptr<GameObject> object)
+{
+    int g_widht = m_config.global.width;
+    int g_height = m_config.global.height;
+    Point2D position = object->getPosition();
+
+    if (position.getX() > g_widht) {
+        position.setX(g_widht - object->getSize().first);
+    }
+
+    if (position.getX() < m_leftBorder.getWidth()) {
+        position.setX(m_leftBorder.getWidth());
+    }
+
+    if (position.getY() > g_height) {
+        position.setY(g_height - object->getSize().second);
+    }
+
+    if (position.getY() < m_topBorder.getHeight()) {
+        position.setY(m_buttomBorder.getHeight());
+    }
+
+    object->setPosition(position);
+}
+
+void Game::hockeyPuckLogic()
+{
+    bool isHit = false;
+    HockeyStriker const* striker = nullptr;
+    HockeyPuck* puck = nullptr;
+    const float cFriction = 1;
+    const float cVelocity = 40;
+    float friction = 0;
+    float velocity = 0;
+
+    puck = dynamic_cast<HockeyPuck *>(m_puck.get());
+    striker = dynamic_cast<HockeyStriker const*>(m_striker_1.get());
+
+    if (puck->isHit(striker->getTopHitBox())) {
+        isHit = true;
+        velocity = -1 * cVelocity;
+        friction = cFriction;
+        LOG_DEBUG("Hit strikerTop\n");
+    }
+
+    if (puck->isHit(striker->getBottomHitBox())) {
+        isHit = true;
+        velocity = cVelocity;
+        friction = -1 * cFriction;
+        LOG_DEBUG("Hit strikerBottom\n");
+    }
+
+    keepObjectInBorder(m_puck);
+
+    if (puck->isHit(m_topBorder)) {
+        isHit = true;
+        velocity = puck->getVelocity().getY();
+        if (velocity < 0) {
+            velocity = velocity * -1;
+            friction = -1 * cFriction;
+        }
+        LOG_DEBUG("Hit topBorder\n");
+    }
+
+    if (puck->isHit(m_buttomBorder)) {
+        isHit = true;
+        velocity = puck->getVelocity().getY();
+        if (velocity > 0) {
+            velocity = velocity * -1;
+            friction = cFriction;
+        }
+
+        LOG_DEBUG("Hit bottomBorder\n");
+    }
+
+    if (isHit) {
+        puck->setFriction(Vector2D(0, friction));
+        puck->setVelocity(Vector2D(0, velocity));
+    }
+}
+
+void Game::update(float dt)
+{
+    hockeyPuckLogic();
+    m_puck->update(dt);
+
+    keepObjectInBorder(m_striker_1);
 }
 
 bool AirHockey::init()
@@ -130,10 +242,12 @@ bool AirHockey::init()
     manager->setRenderer(game->getWindow()->getRenderer());
 
     isRunning = true;
-
-    isRunning &= manager->addTextureByPath((int)TexturesID::HockeyBackground, ASSETS_FOLDER "/BackGround.png");
-    isRunning &= manager->addTextureByPath((int)TexturesID::HockeyStriker, ASSETS_FOLDER "/Striker.png");
-    isRunning &= manager->addTextureByPath((int)TexturesID::HockeyPuck, ASSETS_FOLDER "/Puck.png");
+    isRunning &= manager->addTextureByPath((int)TexturesID::HockeyBackground,
+                                           ASSETS_FOLDER "/BackGround.png");
+    isRunning &= manager->addTextureByPath((int)TexturesID::HockeyStriker,
+                                           ASSETS_FOLDER "/Striker.png");
+    isRunning &= manager->addTextureByPath((int)TexturesID::HockeyPuck,
+                                           ASSETS_FOLDER "/Puck.png");
 
     isRunning &= game->init();
 
@@ -143,7 +257,7 @@ bool AirHockey::init()
 void AirHockey::handleEvent()
 {
     SDL_Event sdl_event;
-    std::unique_ptr<Event> event;
+    std::shared_ptr<Event> event = nullptr;
 
     while (SDL_PollEvent(&sdl_event)) {
         switch (sdl_event.type) {
@@ -154,21 +268,27 @@ void AirHockey::handleEvent()
 
                 break;
             default:
-                event = std::make_unique<Event>();
+                event = std::make_shared<Event>();
                 event->type = EventType::SDL_Event;
                 event->data.sdl_event = sdl_event;
 
-                EventManager::pushEvent(std::move(event));
+                EventManager::pushEvent(event);
 
                 break;
         }
     }
+
+    event = std::make_shared<Event>();
+    event->type = EventType::GameEvent;
+    event->data.game_event.type = GameEventType::Tick;
+    EventManager::pushEvent(event);
 }
 
-bool AirHockey::update()
+bool AirHockey::update(float dt)
 {
     Game* game = Game::getGame();
 
+    game->update(dt);
     game->draw();
 
     return isRunning;

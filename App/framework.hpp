@@ -4,6 +4,7 @@
 #include "game_objects/game_object.hpp"
 #include "game_objects/hockey_striker.hpp"
 #include "window/window.hpp"
+#include "parser/xml/config_parser.hpp"
 
 #include <memory>
 
@@ -19,6 +20,7 @@ public:
     Window* getWindow() { return m_window; }
 
     void draw();
+    void update(float dt);
 
     bool init();
 
@@ -26,6 +28,9 @@ protected:
     Game();
 
 private:
+    void keepObjectInBorder(std::shared_ptr<GameObject> object);
+    void hockeyPuckLogic();
+
     Window* m_window;
 
     std::shared_ptr<GameObject> m_striker_1;
@@ -40,13 +45,16 @@ private:
     HitBox2D m_leftGate;
     HitBox2D m_rightGate;
 
+    XMLLoader* m_parser;
+    Config m_config;
+
     static Game* m_game;
 };
 
 namespace AirHockey {
     bool init();
     void handleEvent();
-    bool update();
+    bool update(float dt);
     void close();
 }
 
