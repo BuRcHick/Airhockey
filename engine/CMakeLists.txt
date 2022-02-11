@@ -10,6 +10,7 @@ add_library(
     hitbox/hitbox_2d.cpp
     xml/xml_loader.cpp
     vector/vector_2d.cpp
+    point/point_2d.cpp
 )
 
 find_library(SDL2 NAMES "SDL2")
