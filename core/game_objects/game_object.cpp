@@ -23,10 +23,10 @@ bool GameObject::isHit(const HitBox2D& hitbox)
     return m_hitBox.isHit(hitbox);
 }
 
-
-void GameObject::move(Vector2D position)
+void GameObject::setPosition(Point2D position)
 {
     m_position = position;
+    m_hitBox.move(m_position.getX(), m_position.getY());
 }
 
 bool GameObject::resize(int width, int height)
@@ -40,6 +40,8 @@ bool GameObject::resize(int width, int height)
     m_width = width;
     m_height = height;
 
+    m_hitBox.resize(width, height);
+
     return true;
 }
 
@@ -47,5 +49,8 @@ void GameObject::draw()
 {
     TextureManager* manager = TextureManager::getManager();
 
-    manager->drawTextureByID((int)m_textureID, (int)m_position.getX(), (int)m_position.getY(), m_width, m_height);
+    manager->drawTextureByID((int)m_textureID, (int)m_position.getX(),
+                             (int)m_position.getY(), m_width, m_height);
+    manager->drawRectangle(m_hitBox.getX(), m_hitBox.getY(),
+                           m_hitBox.getWidth(), m_hitBox.getHeight());
 }

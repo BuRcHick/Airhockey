@@ -9,8 +9,12 @@ public:
     HockeyStriker();
     virtual ~HockeyStriker() = default;
 
-    virtual void handleEvent(Event* event) override;
     virtual bool isHit(const GameObject& object) override;
+    virtual void handleEvent(Event* event) override;
+
+    virtual bool resize(int width, int height) override;
+    virtual void draw() override;
+    virtual void setPosition(Point2D point) override;
 
     const HitBox2D& getTopHitBox() const { return m_topHitBox; }
     const HitBox2D& getMiddleHitBox() const { return m_middleHitBox; }
