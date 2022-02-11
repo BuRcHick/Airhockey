@@ -10,8 +10,8 @@ public:
     void setX(float x);
     void setY(float y);
 
-    float getX() { return m_x; }
-    float getY() { return m_y; }
+    float getX() const { return m_x; }
+    float getY() const { return m_y; }
 
     Vector2D& operator +=(Vector2D& vector);
     friend Vector2D operator +(Vector2D& vector1, const Vector2D& vector2);
@@ -23,6 +23,8 @@ public:
     friend Vector2D operator *(Vector2D& vector1, const Vector2D& vector2);
 
     Vector2D& operator *=(float scale);
+    friend Vector2D operator *(Vector2D& vector1, float scale);
+
     Vector2D& operator /=(float scale);
 
     float length();

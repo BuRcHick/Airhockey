@@ -53,6 +53,11 @@ Vector2D operator *(Vector2D& vector1, const Vector2D& vector2)
     return Vector2D(vector1.m_x * vector2.m_x, vector1.m_y * vector2.m_y);
 }
 
+Vector2D operator *(Vector2D& vector1, float scale)
+{
+    return Vector2D(vector1.m_x * scale, vector1.m_y * scale);
+}
+
 Vector2D& Vector2D::operator*=(float scale)
 {
     m_x *= scale;
