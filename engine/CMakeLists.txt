@@ -9,6 +9,7 @@ add_library(
     texture/texture_manager.cpp
     hitbox/hitbox_2d.cpp
     xml/xml_loader.cpp
+    vector/vector_2d.cpp
 )
 
 find_library(SDL2 NAMES "SDL2")
