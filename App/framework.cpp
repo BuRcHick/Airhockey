@@ -1,10 +1,14 @@
 #include "SDL2/SDL.h"
-
 #include "framework.hpp"
 #include "texture/texture_manager.hpp"
 #include "game_objects/hockey_striker.hpp"
 #include "game_objects/hockey_puck.hpp"
 #include "event/event_manager.hpp"
+#include "logger/logger.hpp"
+#include "xml/xml_loader.hpp"
+
+#include <random>
+#include <ctime>
 
 Game* Game::m_game = nullptr;
 bool isRunning = false;
@@ -19,6 +23,13 @@ Game::Game()
 {
     m_window = Window::create("Big Dick Game");
     m_window->resize(WIDTH, HEIGHT);
+
+    m_parser = new ConfigParser();
+}
+
+Game::~Game()
+{
+    delete m_parser;
 }
 
 Game* Game::getGame()
@@ -32,14 +43,63 @@ Game* Game::getGame()
 
 bool Game::init()
 {
+    bool result = true;
+    int width = 0;
+    int height = 0;
+
+    result = m_parser->load(CONFIG_FOLDER "/config.xml");
+    result &= m_parser->parse();
+    if (result != true) {
+        LOG_ERROR("Failed to parse config");
+
+        return false;
+    }
+
+    m_config = dynamic_cast<ConfigParser*>(m_parser)->getConfig();
+
     m_striker_1 = std::make_shared<HockeyStriker>();
     m_striker_2 = std::make_shared<HockeyStriker>();
     m_puck = std::make_shared<HockeyPuck>();
 
-    m_striker_1->resize(100, 100);
-    m_striker_1->move(Vector2D(10, 0));
+    m_striker_1->resize(m_config.scene.hockeyStriker.width,
+                        m_config.scene.hockeyStriker.height);
+    m_striker_1->setPosition(Point2D(10, 0));
 
-    EventManager::getManager()->subscribeOnEvent(std::make_pair(EventType::SDL_Event, SDL_MOUSEMOTION), m_striker_1);
+    m_puck->resize(m_config.scene.hockeyPuck.width,
+                   m_config.scene.hockeyPuck.height);
+
+    width = m_config.global.width / 2 - m_config.scene.hockeyPuck.width / 2;
+    height = m_config.global.height / 2 - m_config.scene.hockeyPuck.height / 2;
+    m_puck->setPosition(Point2D((float) width, (float) height));
+
+    height = m_config.global.height - m_config.scene.bottomBorder.height;
+    m_buttomBorder.move(0, (float) height);
+    m_buttomBorder.resize(m_config.scene.bottomBorder.width,
+                          m_config.scene.bottomBorder.height);
+
+    m_topBorder.move(0, 0);
+    m_topBorder.resize(m_config.scene.topBorder.width,
+                       m_config.scene.topBorder.height);
+
+    m_leftBorder.move(0, 0);
+    m_leftBorder.resize(m_config.scene.leftBorder.width,
+                        m_config.scene.leftBorder.height);
+
+    width = m_config.global.width - m_config.scene.rightBorder.width;
+    m_rightBorder.move((float) width, 0);
+    m_rightBorder.resize(m_config.scene.rightBorder.width,
+                         m_config.scene.rightBorder.height);
+
+    m_window->resize(m_config.global.width, m_config.global.height);
+
+    EventManager::getManager()->subscribeOnEvent(
+            std::make_pair(EventType::SDL_Event, SDL_MOUSEMOTION),
+            m_striker_1);
+    EventManager::getManager()->subscribeOnEvent(
+            std::make_pair(EventType::GameEvent, GameEventType::Tick),
+            m_puck);
+
+    std::srand(std::time(nullptr));
 
     return true;
 }
