@@ -173,8 +173,10 @@ void Game::hockeyPuckLogic()
     HockeyPuck* puck = nullptr;
     const float cFriction = 1;
     const float cVelocity = 40;
+    const float cAngle = 10;
     float friction = 0;
     float velocity = 0;
+    float angle = 0;
 
     puck = dynamic_cast<HockeyPuck *>(m_puck.get());
     striker = dynamic_cast<HockeyStriker const*>(m_striker_1.get());
@@ -182,6 +184,7 @@ void Game::hockeyPuckLogic()
     if (puck->isHit(striker->getTopHitBox())) {
         isHit = true;
         velocity = -1 * cVelocity;
+        angle = puck->getAngle().getX();
         friction = cFriction;
         LOG_DEBUG("Hit strikerTop\n");
     }
@@ -189,6 +192,7 @@ void Game::hockeyPuckLogic()
     if (puck->isHit(striker->getBottomHitBox())) {
         isHit = true;
         velocity = cVelocity;
+        angle = puck->getAngle().getX();
         friction = -1 * cFriction;
         LOG_DEBUG("Hit strikerBottom\n");
     }
@@ -202,6 +206,8 @@ void Game::hockeyPuckLogic()
             velocity = velocity * -1;
             friction = -1 * cFriction;
         }
+
+        angle = puck->getAngle().getX();
         LOG_DEBUG("Hit topBorder\n");
     }
 
@@ -213,10 +219,31 @@ void Game::hockeyPuckLogic()
             friction = cFriction;
         }
 
+        angle = puck->getAngle().getX();
         LOG_DEBUG("Hit bottomBorder\n");
     }
 
+    if (puck->isHit(m_rightBorder)) {
+        isHit = true;
+        angle = -1 * cAngle;
+        velocity = puck->getVelocity().getY();
+        friction = cFriction;
+        LOG_DEBUG("Hit left border\n");
+    }
+
+    if (puck->isHit(m_leftBorder)) {
+        isHit = true;
+        angle = cAngle;
+        velocity = puck->getVelocity().getY();
+        friction = cFriction;
+        LOG_DEBUG("Hit left border\n");
+    }
+
     if (isHit) {
+        if (0 == puck->getAngle().getX()) {
+            angle = std::rand() % (int)cAngle;
+        }
+        puck->setAngle(Vector2D(angle, 0));
         puck->setFriction(Vector2D(0, friction));
         puck->setVelocity(Vector2D(0, velocity));
     }

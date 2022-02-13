@@ -22,19 +22,20 @@ void HockeyPuck::update(float dt)
 
     if (currentVelocity.getY() < 0 && m_friction.getY() < 0) {
         setVelocity(Vector2D(0, 0));
+        setAngle(Vector2D(0, 0));
         m_friction = Vector2D(0, 0);
         return;
     }
 
     if (currentVelocity.getY() > 0 && m_friction.getY() > 0) {
         setVelocity(Vector2D(0, 0));
+        setAngle(Vector2D(0, 0));
         m_friction = Vector2D(0, 0);
         return;
     }
 
     currentVelocity = currentVelocity + m_friction * dt;
     setVelocity(currentVelocity);
-
 }
 
 void HockeyPuck::handleGameEvent(GameEvent& event)

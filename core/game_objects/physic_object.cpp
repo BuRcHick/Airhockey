@@ -22,6 +22,7 @@ void PhysicObject::update(float dt)
     Point2D position = getPosition();
 
     position = position + m_velocity * dt;
+    position = position + m_angle * dt;
 
     setPosition(position);
 }
