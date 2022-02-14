@@ -184,27 +184,38 @@ void Game::hockeyPuckLogic()
     float friction = 0;
     float velocity = 0;
     float angle = 0;
+    Vector2D directionVector = Vector2D(0, 0);
 
-    puck = dynamic_cast<HockeyPuck *>(m_puck.get());
-    striker = dynamic_cast<HockeyStriker const*>(m_striker_1.get());
+    puck = dynamic_cast<HockeyPuck*>(m_puck.get());
+    striker = dynamic_cast<HockeyStriker*>(m_striker_1.get());
 
     if (puck->isHit(striker->getTopHitBox())) {
         isHit = true;
         velocity = -1 * cVelocity;
-        angle = puck->getAngle().getX();
+
+        directionVector = striker->getDirectionAngle();
+        if (0 == directionVector.length()) {
+            angle = puck->getAngle().getX();
+        } else {
+            angle = directionVector.getX();
+        }
+
         friction = cFriction;
-        LOG_DEBUG("Hit strikerTop\n");
+        LOG_DEBUG("Hit strikerTop. Angle = %f\n", angle);
     }
 
     if (puck->isHit(striker->getBottomHitBox())) {
         isHit = true;
         velocity = cVelocity;
-        angle = puck->getAngle().getX();
+        directionVector = striker->getDirectionAngle();
+        if (0 == directionVector.length()) {
+            angle = puck->getAngle().getX();
+        } else {
+            angle = directionVector.getX();
+        }
         friction = -1 * cFriction;
-        LOG_DEBUG("Hit strikerBottom\n");
+        LOG_DEBUG("Hit strikerBottom. Angle = %f\n", angle);
     }
-
-    keepObjectInBorder(m_puck);
 
     if (puck->isHit(m_topBorder)) {
         isHit = true;
@@ -232,7 +243,7 @@ void Game::hockeyPuckLogic()
 
     if (puck->isHit(m_rightBorder)) {
         isHit = true;
-        angle = -1 * cAngle;
+        angle = puck->getAngle().getX() * -1;
         velocity = puck->getVelocity().getY();
         friction = cFriction;
         LOG_DEBUG("Hit left border\n");
@@ -240,16 +251,13 @@ void Game::hockeyPuckLogic()
 
     if (puck->isHit(m_leftBorder)) {
         isHit = true;
-        angle = cAngle;
+        angle = puck->getAngle().getX() * -1;
         velocity = puck->getVelocity().getY();
         friction = cFriction;
         LOG_DEBUG("Hit left border\n");
     }
 
     if (isHit) {
-        if (0 == puck->getAngle().getX()) {
-            angle = std::rand() % (int)cAngle;
-        }
         puck->setAngle(Vector2D(angle, 0));
         puck->setFriction(Vector2D(0, friction));
         puck->setVelocity(Vector2D(0, velocity));
@@ -258,9 +266,10 @@ void Game::hockeyPuckLogic()
 
 void Game::update(float dt)
 {
-    hockeyPuckLogic();
     m_puck->update(dt);
+    hockeyPuckLogic();
 
+    m_striker_1->update(dt);
     keepObjectInBorder(m_striker_1);
 }
 
