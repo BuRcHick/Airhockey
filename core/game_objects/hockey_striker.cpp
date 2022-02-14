@@ -1,6 +1,9 @@
 #include "hockey_striker.hpp"
 #include "texture/texture_manager.hpp"
 
+#define HITBOX_TOP_BOTTOM_HEIGHT 20
+#define HITBOX_MIDDLE_HEIGHT (HITBOX_TOP_BOTTOM_HEIGHT << 1)
+
 HockeyStriker::HockeyStriker()
     : PhysicObject(), GameObject(TexturesID::HockeyStriker, 0, 0),
     m_topHitBox(0, 0, 0, 0),
@@ -17,9 +20,9 @@ HockeyStriker::HockeyStriker()
     if (nullptr != texture) {
         int heigth = texture->getHeight();
         int width = texture->getWidth();
-        m_topHitBox.resize(width, 5);
-        m_buttomHitBox.resize(width, 5);
-        m_middleHitBox.resize(width, heigth - 10);
+        m_topHitBox.resize(width, HITBOX_TOP_BOTTOM_HEIGHT);
+        m_buttomHitBox.resize(width, HITBOX_TOP_BOTTOM_HEIGHT);
+        m_middleHitBox.resize(width, heigth - HITBOX_MIDDLE_HEIGHT);
     }
 }
 
@@ -61,17 +64,19 @@ void HockeyStriker::setPosition(Point2D position)
     m_previousPosition = getPosition();
 
     m_topHitBox.move(position.getX(), position.getY());
-    m_middleHitBox.move(position.getX(), position.getY() + 5);
-    m_buttomHitBox.move(position.getX(), position.getY() + heigth - 5);
+    m_middleHitBox.move(position.getX(),
+                        position.getY() + HITBOX_TOP_BOTTOM_HEIGHT);
+    m_buttomHitBox.move(position.getX(),
+                        position.getY() + heigth - HITBOX_TOP_BOTTOM_HEIGHT);
 
     GameObject::setPosition(position);
 }
 
 bool HockeyStriker::resize(int width, int height)
 {
-    m_topHitBox.resize(width, 5);
-    m_middleHitBox.resize(width, height - 10);
-    m_buttomHitBox.resize(width, 5);
+    m_topHitBox.resize(width, HITBOX_TOP_BOTTOM_HEIGHT);
+    m_middleHitBox.resize(width, height - HITBOX_MIDDLE_HEIGHT);
+    m_buttomHitBox.resize(width, HITBOX_TOP_BOTTOM_HEIGHT);
 
     return GameObject::resize(width, height);
 }
