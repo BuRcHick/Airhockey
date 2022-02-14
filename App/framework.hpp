@@ -30,6 +30,9 @@ protected:
 private:
     void keepObjectInBorder(std::shared_ptr<GameObject> object);
     void hockeyPuckLogic(float dt);
+    void hockeyStrikerLogic(std::shared_ptr<HockeyStriker> striker, float dt);
+    void playerLogic();
+    void botLogic();
     void drawHitbox();
 
     Window* m_window;

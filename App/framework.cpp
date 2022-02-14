@@ -173,6 +173,34 @@ void Game::keepObjectInBorder(std::shared_ptr<GameObject> object)
     object->setPosition(position);
 }
 
+void Game::hockeyStrikerLogic(std::shared_ptr<HockeyStriker> striker, float dt)
+{
+    Point2D position = Point2D(0, 0);
+    int puck_width = 0, puck_height = 0, striker_width = 0, striker_height = 0;
+    std::tie(puck_width, puck_height) = m_puck->getSize();
+    std::tie(striker_width, striker_height) = striker->getSize();
+
+    if (m_puck->isHit(striker->getTopHitBox())) {
+        position.setY(m_puck->getPosition().getY() + puck_height);
+    }
+
+    if (m_puck->isHit(striker->getMiddleHitBox())) {
+        int temp_width = m_puck->getPosition().getX() + puck_width;
+        if (temp_width > striker->getPosition().getX()) {
+            position.setX(temp_width);
+        } else {
+            temp_width = striker->getPosition().getX() + striker_width;
+            if (m_puck->getPosition().getX() < temp_width) {
+                position.setX(m_puck->getPosition().getX());
+            }
+        }
+    }
+
+    if (m_puck->isHit(striker->getBottomHitBox())) {
+        position.setY(m_puck->getPosition().getY() - striker_height);
+    }
+}
+
 void Game::hockeyPuckLogic(float dt)
 {
     bool isHit = false;
@@ -187,7 +215,6 @@ void Game::hockeyPuckLogic(float dt)
     Vector2D directionVector = Vector2D(0, 0);
     Vector2D accelerationVector = Vector2D(0, 0);
     static const float velocityLimit = 90;
-
 
     puck = dynamic_cast<HockeyPuck*>(m_puck.get());
     striker = dynamic_cast<HockeyStriker*>(m_striker_1.get());
@@ -340,10 +367,13 @@ void Game::hockeyPuckLogic(float dt)
 void Game::update(float dt)
 {
     m_striker_1->update(dt);
-    keepObjectInBorder(m_striker_1);
 
     m_puck->update(dt);
     hockeyPuckLogic(dt);
+
+    hockeyStrikerLogic(std::dynamic_pointer_cast<HockeyStriker>(m_striker_1), dt);
+    keepObjectInBorder(m_striker_1);
+
 }
 
 bool AirHockey::init()

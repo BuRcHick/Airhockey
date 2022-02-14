@@ -43,12 +43,6 @@ void HockeyStriker::drawHitbox()
                                                 m_buttomHitBox.getHeight());
 }
 
-bool HockeyStriker::isHit(const GameObject& object)
-{
-    /* TODO */
-    return false;
-}
-
 void HockeyStriker::setPosition(Point2D position)
 {
     int width, heigth;

@@ -9,7 +9,6 @@ public:
     HockeyStriker();
     virtual ~HockeyStriker() = default;
 
-    virtual bool isHit(const GameObject& object) override;
     virtual void handleEvent(Event* event) override;
 
     virtual bool resize(int width, int height) override;
