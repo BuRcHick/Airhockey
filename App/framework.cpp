@@ -222,6 +222,37 @@ void Game::hockeyPuckLogic(float dt)
         LOG_DEBUG("Hit strikerTop. Angle = %f\n", angle);
     }
 
+    if (puck->isHit(striker->getMiddleHitBox())) {
+        isHit = true;
+
+        accelerationVector = striker->getAcceleration(dt);
+        Vector2D currentVelocity = puck->getVelocity();
+        Vector2D result = currentVelocity + accelerationVector;
+        velocity = result.getY();
+
+        if (currentVelocity.getY() < 0 && velocity > 0) {
+            velocity *= -1;
+        }
+
+        if (velocity < 0 && velocity < (velocityLimit * -1)) {
+            velocity = velocityLimit * -1;
+        } else if (velocity > velocityLimit) {
+            velocity = velocityLimit;
+        }
+
+        directionVector = striker->getDirectionAngle();
+        if (0 == puck->getAngle().getX()) {
+            angle = directionVector.getX();
+        } else {
+            angle = puck->getAngle().getX();
+        }
+
+        angle *= -1;
+
+        friction = puck->getFriction().getY();
+        LOG_DEBUG("Hit strikerMiddle. Angle = %f\n", angle);
+    }
+
     if (puck->isHit(striker->getBottomHitBox())) {
         isHit = true;
 
@@ -248,7 +279,7 @@ void Game::hockeyPuckLogic(float dt)
             angle = directionVector.getX();
         }
         friction = -1 * cFriction;
-        LOG_DEBUG("Hit strikerBottom. Angle = %f\n", angle);
+        //LOG_DEBUG("Hit strikerBottom. Angle = %f\n", angle);
     }
 
     if (puck->isHit(m_topBorder)) {
