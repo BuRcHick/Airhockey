@@ -25,6 +25,12 @@ bool GameObject::isHit(const HitBox2D& hitbox)
 
 void GameObject::setPosition(Point2D position)
 {
+    if (position.getX() < 0 || position.getY() < 0) {
+        LOG_ERROR("Invalid input: position {x = %f, y = %f}\n",
+                  position.getX(), position.getY());
+
+        return;
+    }
     m_position = position;
     m_hitBox.move(m_position.getX(), m_position.getY());
 }
