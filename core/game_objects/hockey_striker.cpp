@@ -7,7 +7,8 @@ HockeyStriker::HockeyStriker()
     m_middleHitBox(0, 0, 0, 0),
     m_buttomHitBox(0, 0, 0, 0),
     m_nextPosition(0, 0),
-    m_previousPosition(0, 0)
+    m_previousPosition(0, 0),
+    m_directionStartPosition(0, 0)
 {
     TextureManager* manager = TextureManager::getManager();
     Texture const* texture =
@@ -52,6 +53,8 @@ void HockeyStriker::setPosition(Point2D position)
     Point2D currentPosition = getPosition();
 
     if (m_previousPosition == position || currentPosition == position) {
+        m_directionStartPosition = m_previousPosition;
+
         return;
     }
 
@@ -117,10 +120,19 @@ Vector2D HockeyStriker::getDirectionAngle() const
         return Vector2D(0, 0);
     }
 
-    LOG_DEBUG("Direction: {x = %f, y = %f}. Normailze: {x = %f, y = %f}\n",
-              directionVector.getX(), directionVector.getY(),
-              directionVector.normalize().getX(),
-              directionVector.normalize().getY());
-
     return directionVector.normalize();
+}
+
+Vector2D HockeyStriker::getAcceleration(float dt) const
+{
+    Vector2D acceleration = Vector2D(0, 0);
+    Point2D currentPosition = getPosition();
+
+    acceleration = currentPosition - m_directionStartPosition;
+    acceleration /= dt;
+
+    LOG_DEBUG("Acceleration: x = %f, y = %f\n", acceleration.getX(),
+              acceleration.getY());
+
+    return acceleration;
 }

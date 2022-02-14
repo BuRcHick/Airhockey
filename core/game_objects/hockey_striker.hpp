@@ -17,6 +17,7 @@ public:
     virtual void update(float dt) override;
 
     Vector2D getDirectionAngle() const;
+    Vector2D getAcceleration(float dt) const;
 
     const HitBox2D& getTopHitBox() const { return m_topHitBox; }
     const HitBox2D& getMiddleHitBox() const { return m_middleHitBox; }
@@ -33,6 +34,7 @@ private:
     HitBox2D m_buttomHitBox;
     Point2D  m_nextPosition;
     Point2D  m_previousPosition;
+    Point2D  m_directionStartPosition;
 };
 
 #endif /* __HOCKEY_STRIKER_HPP__ */
