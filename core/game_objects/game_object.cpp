@@ -45,12 +45,20 @@ bool GameObject::resize(int width, int height)
     return true;
 }
 
+void GameObject::drawHitbox()
+{
+    TextureManager* manager = TextureManager::getManager();
+
+    manager->drawRectangle(m_hitBox.getX(), m_hitBox.getY(),
+                           m_hitBox.getWidth(), m_hitBox.getHeight());
+}
+
 void GameObject::draw()
 {
     TextureManager* manager = TextureManager::getManager();
 
     manager->drawTextureByID((int)m_textureID, (int)m_position.getX(),
                              (int)m_position.getY(), m_width, m_height);
-    manager->drawRectangle(m_hitBox.getX(), m_hitBox.getY(),
-                           m_hitBox.getWidth(), m_hitBox.getHeight());
+
+    drawHitbox();
 }

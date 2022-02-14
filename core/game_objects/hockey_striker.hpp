@@ -13,12 +13,14 @@ public:
     virtual void handleEvent(Event* event) override;
 
     virtual bool resize(int width, int height) override;
-    virtual void draw() override;
     virtual void setPosition(Point2D point) override;
 
     const HitBox2D& getTopHitBox() const { return m_topHitBox; }
     const HitBox2D& getMiddleHitBox() const { return m_middleHitBox; }
     const HitBox2D& getBottomHitBox() const { return m_buttomHitBox; }
+
+protected:
+    virtual void drawHitbox() override;
 
 private:
     void handleSDLEvent(SDL_Event& event);

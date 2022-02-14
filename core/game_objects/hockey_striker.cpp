@@ -20,9 +20,8 @@ HockeyStriker::HockeyStriker()
     }
 }
 
-void HockeyStriker::draw()
+void HockeyStriker::drawHitbox()
 {
-    GameObject::draw();
 
     TextureManager::getManager()->drawRectangle(m_topHitBox.getX(),
                                                 m_topHitBox.getY(),
@@ -36,7 +35,6 @@ void HockeyStriker::draw()
                                                 m_buttomHitBox.getY(),
                                                 m_buttomHitBox.getWidth(),
                                                 m_buttomHitBox.getHeight());
-
 }
 
 bool HockeyStriker::isHit(const GameObject& object)

@@ -104,18 +104,9 @@ bool Game::init()
     return true;
 }
 
-void Game::draw()
+void Game::drawHitbox()
 {
-    SDL_Renderer* renderer = m_window->getRenderer();
     TextureManager* texture_manager = TextureManager::getManager();
-
-    SDL_RenderClear(renderer);
-
-    texture_manager->drawTextureByID((int)TexturesID::HockeyBackground, 0, 0,
-                                     m_config.global.width,
-                                     m_config.global.height);
-    m_striker_1->draw();
-    m_puck->draw();
 
     texture_manager->drawRectangle(m_topBorder.getX(),
                                    m_topBorder.getY(),
@@ -136,6 +127,22 @@ void Game::draw()
                                    m_leftBorder.getY(),
                                    m_leftBorder.getWidth(),
                                    m_leftBorder.getHeight());
+}
+
+void Game::draw()
+{
+    SDL_Renderer* renderer = m_window->getRenderer();
+    TextureManager* texture_manager = TextureManager::getManager();
+
+    SDL_RenderClear(renderer);
+
+    texture_manager->drawTextureByID((int)TexturesID::HockeyBackground, 0, 0,
+                                     m_config.global.width,
+                                     m_config.global.height);
+    m_striker_1->draw();
+    m_puck->draw();
+
+    drawHitbox();
 
     SDL_RenderPresent(renderer);
 

@@ -31,6 +31,9 @@ public:
         return std::make_pair(m_width, m_height);
     }
 
+protected:
+    virtual void drawHitbox();
+
 private:
     Point2D m_position;
     TexturesID m_textureID;
