@@ -81,7 +81,7 @@ float Vector2D::length()
 
 float Vector2D::lengthSqrt()
 {
-    return std::sqrt(m_x * m_x + m_y * m_y);
+    return m_x * m_x + m_y * m_y;
 }
 
 Vector2D Vector2D::normalize()
