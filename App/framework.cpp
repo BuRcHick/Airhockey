@@ -274,11 +274,11 @@ void Game::hockeyPuckLogic()
 
 void Game::update(float dt)
 {
-    m_puck->update(dt);
-    hockeyPuckLogic();
-
     m_striker_1->update(dt);
     keepObjectInBorder(m_striker_1);
+
+    m_puck->update(dt);
+    hockeyPuckLogic();
 }
 
 bool AirHockey::init()
