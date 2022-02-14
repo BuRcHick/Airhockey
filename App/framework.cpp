@@ -154,20 +154,20 @@ void Game::keepObjectInBorder(std::shared_ptr<GameObject> object)
     int g_height = m_config.global.height;
     Point2D position = object->getPosition();
 
-    if (position.getX() > g_widht) {
-        position.setX(g_widht - object->getSize().first);
+    if ((position.getX() + object->getSize().first) > m_rightBorder.getX()) {
+        position.setX(m_rightBorder.getX() - object->getSize().first);
     }
 
     if (position.getX() < m_leftBorder.getWidth()) {
         position.setX(m_leftBorder.getWidth());
     }
 
-    if (position.getY() > g_height) {
-        position.setY(g_height - object->getSize().second);
+    if ((position.getY() + object->getSize().second) > m_buttomBorder.getY()) {
+        position.setY(m_buttomBorder.getY() - object->getSize().second);
     }
 
     if (position.getY() < m_topBorder.getHeight()) {
-        position.setY(m_buttomBorder.getHeight());
+        position.setY(m_topBorder.getHeight());
     }
 
     object->setPosition(position);
