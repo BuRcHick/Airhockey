@@ -14,6 +14,9 @@ public:
 
     virtual bool resize(int width, int height) override;
     virtual void setPosition(Point2D point) override;
+    virtual void update(float dt) override;
+
+    Vector2D getDirectionAngle() const;
 
     const HitBox2D& getTopHitBox() const { return m_topHitBox; }
     const HitBox2D& getMiddleHitBox() const { return m_middleHitBox; }
@@ -28,6 +31,8 @@ private:
     HitBox2D m_topHitBox;
     HitBox2D m_middleHitBox;
     HitBox2D m_buttomHitBox;
+    Point2D  m_nextPosition;
+    Point2D  m_previousPosition;
 };
 
 #endif /* __HOCKEY_STRIKER_HPP__ */

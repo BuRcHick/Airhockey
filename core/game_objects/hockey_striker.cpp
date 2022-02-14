@@ -5,7 +5,9 @@ HockeyStriker::HockeyStriker()
     : PhysicObject(), GameObject(TexturesID::HockeyStriker, 0, 0),
     m_topHitBox(0, 0, 0, 0),
     m_middleHitBox(0, 0, 0, 0),
-    m_buttomHitBox(0, 0, 0, 0)
+    m_buttomHitBox(0, 0, 0, 0),
+    m_nextPosition(0, 0),
+    m_previousPosition(0, 0)
 {
     TextureManager* manager = TextureManager::getManager();
     Texture const* texture =
@@ -47,6 +49,14 @@ void HockeyStriker::setPosition(Point2D position)
 {
     int width, heigth;
     std::tie(width, heigth) = getSize();
+    Point2D currentPosition = getPosition();
+
+    if (m_previousPosition == position || currentPosition == position) {
+        return;
+    }
+
+    m_previousPosition = getPosition();
+
     m_topHitBox.move(position.getX(), position.getY());
     m_middleHitBox.move(position.getX(), position.getY() + 5);
     m_buttomHitBox.move(position.getX(), position.getY() + heigth - 5);
@@ -63,11 +73,19 @@ bool HockeyStriker::resize(int width, int height)
     return GameObject::resize(width, height);
 }
 
+void HockeyStriker::update(float dt)
+{
+    setPosition(m_nextPosition);
+
+    PhysicObject::update(dt);
+}
+
 void HockeyStriker::handleSDLEvent(SDL_Event& event)
 {
     switch (event.type) {
         case SDL_MOUSEMOTION:
-            setPosition(Point2D((float)event.motion.x, (float)event.motion.y));
+            m_nextPosition.setX(event.motion.x);
+            m_nextPosition.setY(event.motion.y);
 
 
             break;
@@ -86,4 +104,23 @@ void HockeyStriker::handleEvent(Event* event)
         default:
             break;
     }
+}
+
+Vector2D HockeyStriker::getDirectionAngle() const
+{
+    Point2D currentPosition = getPosition();
+    Point2D zero = Point2D(0, 0);
+    Vector2D directionVector = currentPosition - m_previousPosition;
+
+    if (currentPosition == m_previousPosition) {
+        LOG_DEBUG("Equal!\n");
+        return Vector2D(0, 0);
+    }
+
+    LOG_DEBUG("Direction: {x = %f, y = %f}. Normailze: {x = %f, y = %f}\n",
+              directionVector.getX(), directionVector.getY(),
+              directionVector.normalize().getX(),
+              directionVector.normalize().getY());
+
+    return directionVector.normalize();
 }
