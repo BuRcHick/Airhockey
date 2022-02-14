@@ -14,6 +14,7 @@ public:
     float getY() { return m_y; }
 
     friend Vector2D operator- (Point2D& first, const Point2D & second);
+    friend bool operator == (Point2D& first, const Point2D& second);
 
     Point2D& operator+ (const Vector2D& vector);
 
