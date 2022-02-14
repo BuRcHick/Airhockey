@@ -173,7 +173,7 @@ void Game::keepObjectInBorder(std::shared_ptr<GameObject> object)
     object->setPosition(position);
 }
 
-void Game::hockeyPuckLogic()
+void Game::hockeyPuckLogic(float dt)
 {
     bool isHit = false;
     HockeyStriker const* striker = nullptr;
@@ -185,13 +185,31 @@ void Game::hockeyPuckLogic()
     float velocity = 0;
     float angle = 0;
     Vector2D directionVector = Vector2D(0, 0);
+    Vector2D accelerationVector = Vector2D(0, 0);
+    static const float velocityLimit = 90;
+
 
     puck = dynamic_cast<HockeyPuck*>(m_puck.get());
     striker = dynamic_cast<HockeyStriker*>(m_striker_1.get());
 
     if (puck->isHit(striker->getTopHitBox())) {
         isHit = true;
-        velocity = -1 * cVelocity;
+
+        accelerationVector = striker->getAcceleration(dt);
+        if (accelerationVector.getY() > 0) {
+            accelerationVector *= -1;
+        }
+        Vector2D currentVelocity = puck->getVelocity();
+        Vector2D result = currentVelocity + accelerationVector;
+        velocity = result.getY();
+
+        if (velocity > 0) {
+            velocity *= -1;
+        }
+
+        if (velocity < (velocityLimit * -1)) {
+            velocity = velocityLimit * -1;
+        }
 
         directionVector = striker->getDirectionAngle();
         if (0 == directionVector.length()) {
@@ -206,7 +224,23 @@ void Game::hockeyPuckLogic()
 
     if (puck->isHit(striker->getBottomHitBox())) {
         isHit = true;
-        velocity = cVelocity;
+
+        accelerationVector = striker->getAcceleration(dt);
+        if (accelerationVector.getY() < 0) {
+            accelerationVector *= -1;
+        }
+        Vector2D currentVelocity = puck->getVelocity();
+        Vector2D result = currentVelocity + accelerationVector;
+        velocity = result.getY();
+
+        if (velocity < 0) {
+            velocity *= -1;
+        }
+
+        if (velocity > velocityLimit) {
+            velocity = velocityLimit;
+        }
+
         directionVector = striker->getDirectionAngle();
         if (0 == directionVector.length()) {
             angle = puck->getAngle().getX();
@@ -278,7 +312,7 @@ void Game::update(float dt)
     keepObjectInBorder(m_striker_1);
 
     m_puck->update(dt);
-    hockeyPuckLogic();
+    hockeyPuckLogic(dt);
 }
 
 bool AirHockey::init()
