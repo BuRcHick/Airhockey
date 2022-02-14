@@ -30,9 +30,7 @@ int main(){
         } else {
             isRunning = AirHockey::update(duration.count());
         }
-
-        std::this_thread::sleep_for(20ms);
-
+        std::this_thread::sleep_for(15ms);
         previousTime = std::chrono::high_resolution_clock::now();
     }
 

@@ -222,7 +222,11 @@ void Game::hockeyPuckLogic()
         velocity = puck->getVelocity().getY();
         if (velocity < 0) {
             velocity = velocity * -1;
-            friction = -1 * cFriction;
+        }
+
+        friction = puck->getFriction().getY();
+        if (friction > 0) {
+            friction *= -1;
         }
 
         angle = puck->getAngle().getX();
@@ -234,7 +238,11 @@ void Game::hockeyPuckLogic()
         velocity = puck->getVelocity().getY();
         if (velocity > 0) {
             velocity = velocity * -1;
-            friction = cFriction;
+        }
+
+        friction = puck->getFriction().getY();
+        if (friction < 0) {
+            friction *= -1;
         }
 
         angle = puck->getAngle().getX();
@@ -245,7 +253,7 @@ void Game::hockeyPuckLogic()
         isHit = true;
         angle = puck->getAngle().getX() * -1;
         velocity = puck->getVelocity().getY();
-        friction = cFriction;
+        friction = puck->getFriction().getY();
         LOG_DEBUG("Hit left border\n");
     }
 
@@ -253,7 +261,7 @@ void Game::hockeyPuckLogic()
         isHit = true;
         angle = puck->getAngle().getX() * -1;
         velocity = puck->getVelocity().getY();
-        friction = cFriction;
+        friction = puck->getFriction().getY();
         LOG_DEBUG("Hit left border\n");
     }
 

@@ -14,6 +14,7 @@ public:
     virtual void handleEvent(Event* event) override;
     virtual void update(float dt) override;
     void setFriction(Vector2D friction);
+    Vector2D getFriction() const { return m_friction; }
 
 private:
     void handleGameEvent(GameEvent& event);
