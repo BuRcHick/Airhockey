@@ -21,14 +21,14 @@ void PhysicObject::update(float dt)
 {
     Point2D position = getPosition();
 
-    if (m_angle.lengthSqrt() > m_velocity.lengthSqrt()) {
-        m_angle = Vector2D(0, 0);
-        m_velocity = Vector2D(0, 0);
-    }
-
     position = position + m_velocity * dt;
-    position = position + m_angle;
+    position = position + m_angle / dt;
 
     setPosition(position);
 }
 
+
+Point2D operator * (Point2D& point, Vector2D& vector)
+{
+    return Point2D(point.getX() * vector.getX(), point.getY() * vector.getY());
+}

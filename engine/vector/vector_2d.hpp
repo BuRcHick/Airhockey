@@ -26,6 +26,7 @@ public:
     friend Vector2D operator *(Vector2D& vector1, float scale);
 
     Vector2D& operator /=(float scale);
+    friend Vector2D operator /(Vector2D& vector1, float scale);
 
     float length();
     float lengthSqrt();

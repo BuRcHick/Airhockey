@@ -74,6 +74,12 @@ Vector2D& Vector2D::operator/=(float scale)
     return *this;
 }
 
+Vector2D operator /(Vector2D& vector1, float scale)
+{
+    return Vector2D(vector1.m_x / scale, vector1.m_y / scale);
+}
+
+
 float Vector2D::length()
 {
     return std::sqrt(m_x * m_x + m_y * m_y);

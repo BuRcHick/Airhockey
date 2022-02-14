@@ -30,4 +30,6 @@ private:
     Direction m_direction;
 };
 
+Point2D operator * (Point2D& point, Vector2D& vector);
+
 #endif /* __PHYSIC_OBJECT_HPP__ */
