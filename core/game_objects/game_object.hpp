@@ -35,6 +35,9 @@ public:
     void setWidthLimits(float min, float max);
     void setHeightLimits(float min, float max);
 
+    Limits getWidthLimits() const { return m_widhtLimits; }
+    Limits getHeightLimits() const { return m_heightLimits; }
+
     Point2D limitPosition(Point2D position);
 
 protected:
