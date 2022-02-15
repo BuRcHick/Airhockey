@@ -87,6 +87,9 @@ bool Game::init()
     m_striker_1->resize(m_config.scene.hockeyStriker.width,
                         m_config.scene.hockeyStriker.height);
 
+    m_striker_2->resize(m_config.scene.hockeyStriker.width,
+                        m_config.scene.hockeyStriker.height);
+
     m_puck->resize(m_config.scene.hockeyPuck.width,
                    m_config.scene.hockeyPuck.height);
 
@@ -116,7 +119,13 @@ bool Game::init()
 
     setLimits();
 
-    m_striker_1->setPosition(Point2D(50, 50));
+    width = m_config.global.width / 2 - m_striker_2->getSize().first / 2;
+    height = m_topBorder.getHeight();
+    m_striker_2->setPosition(Point2D(width, height));
+
+    width = m_config.global.width / 2 - m_striker_1->getSize().first / 2;
+    height = m_buttomBorder.getY() - m_striker_1->getSize().second;
+    m_striker_1->setPosition(Point2D(width, height));
 
     width = m_config.global.width / 2 - m_config.scene.hockeyPuck.width / 2;
     height = m_config.global.height / 2 - m_config.scene.hockeyPuck.height / 2;
@@ -176,6 +185,7 @@ void Game::draw()
                                      m_config.global.width,
                                      m_config.global.height);
     m_striker_1->draw();
+    m_striker_2->draw();
     m_puck->draw();
 
     drawHitbox();
@@ -214,34 +224,68 @@ void Game::hockeyStrikerLogic(std::shared_ptr<HockeyStriker> striker, float dt)
     /* TODO: */
 }
 
+
+std::tuple<float, float> Game::hockeyPuckHitStrikerLogic(
+    std::shared_ptr<HockeyStriker> striker, float dt)
+{
+    auto puck = std::dynamic_pointer_cast<HockeyPuck>(m_puck);
+    Vector2D accelerationVector = Vector2D(0, 0);
+    Vector2D currentVelocity = puck->getVelocity();
+    Vector2D directionVector = Vector2D(0, 0);
+    Vector2D result = Vector2D(0, 0);
+    float angle = 0;
+    float velocity = 0;
+
+    accelerationVector = striker->getAcceleration(dt);
+    result = currentVelocity + accelerationVector;
+    velocity = result.getY();
+
+    directionVector = striker->getDirectionAngle();
+    if (0 == directionVector.length()) {
+        angle = puck->getAngle().getX();
+    } else {
+        angle = directionVector.getX();
+    }
+
+    return std::make_tuple(velocity, angle);
+}
+
+std::shared_ptr<HockeyStriker> Game::getActiveStriker()
+{
+    std::shared_ptr<HockeyStriker> striker;
+    float height = 0;
+
+    height = m_puck->getPosition().getY() + m_puck->getSize().second;
+
+    if (height < m_centralBorder.getY()) {
+        striker = std::dynamic_pointer_cast<HockeyStriker>(m_striker_2);
+    } else {
+        striker = std::dynamic_pointer_cast<HockeyStriker>(m_striker_1);
+    }
+
+    return striker;
+}
+
 void Game::hockeyPuckLogic(float dt)
 {
     bool isHit = false;
-    HockeyStriker const* striker = nullptr;
-    HockeyPuck* puck = nullptr;
+    const float cAngle = 10;
     const float cFriction = 1;
     const float cVelocity = 40;
-    const float cAngle = 10;
+    const float velocityLimit = 90;
+    float angle = 0;
     float friction = 0;
     float velocity = 0;
-    float angle = 0;
-    Vector2D directionVector = Vector2D(0, 0);
-    Vector2D accelerationVector = Vector2D(0, 0);
-    static const float velocityLimit = 90;
+    std::shared_ptr<HockeyStriker> striker;
+    std::shared_ptr<HockeyPuck> puck;
 
-    puck = dynamic_cast<HockeyPuck*>(m_puck.get());
-    striker = dynamic_cast<HockeyStriker*>(m_striker_1.get());
+    striker = getActiveStriker();
+    puck = std::dynamic_pointer_cast<HockeyPuck>(m_puck);
 
     if (puck->isHit(striker->getTopHitBox())) {
         isHit = true;
 
-        accelerationVector = striker->getAcceleration(dt);
-        if (accelerationVector.getY() > 0) {
-            accelerationVector *= -1;
-        }
-        Vector2D currentVelocity = puck->getVelocity();
-        Vector2D result = currentVelocity + accelerationVector;
-        velocity = result.getY();
+        std::tie(velocity, angle) = hockeyPuckHitStrikerLogic(striker, dt);
 
         if (velocity > 0) {
             velocity *= -1;
@@ -251,26 +295,13 @@ void Game::hockeyPuckLogic(float dt)
             velocity = velocityLimit * -1;
         }
 
-        directionVector = striker->getDirectionAngle();
-        if (0 == directionVector.length()) {
-            angle = puck->getAngle().getX();
-        } else {
-            angle = directionVector.getX();
-        }
-
         friction = cFriction;
+
         LOG_DEBUG("Hit strikerTop. Angle = %f\n", angle);
     } else if (puck->isHit(striker->getMiddleHitBox())) {
         isHit = true;
 
-        accelerationVector = striker->getAcceleration(dt);
-        Vector2D currentVelocity = puck->getVelocity();
-        Vector2D result = currentVelocity + accelerationVector;
-        velocity = result.getY();
-
-        if (currentVelocity.getY() < 0 && velocity > 0) {
-            velocity *= -1;
-        }
+        std::tie(velocity, angle) = hockeyPuckHitStrikerLogic(striker, dt);
 
         if (velocity < 0 && velocity < (velocityLimit * -1)) {
             velocity = velocityLimit * -1;
@@ -278,25 +309,13 @@ void Game::hockeyPuckLogic(float dt)
             velocity = velocityLimit;
         }
 
-        directionVector = striker->getDirectionAngle();
-        if (0 == puck->getAngle().getX()) {
-            angle = directionVector.getX();
-        } else {
-            angle = puck->getAngle().getX();
-            angle *= -1;
-        }
+        friction = puck->getFriction().getY();
 
         LOG_DEBUG("Hit strikerMiddle. Angle = %f\n", angle);
     } else if (puck->isHit(striker->getBottomHitBox())) {
         isHit = true;
 
-        accelerationVector = striker->getAcceleration(dt);
-        if (accelerationVector.getY() < 0) {
-            accelerationVector *= -1;
-        }
-        Vector2D currentVelocity = puck->getVelocity();
-        Vector2D result = currentVelocity + accelerationVector;
-        velocity = result.getY();
+        std::tie(velocity, angle) = hockeyPuckHitStrikerLogic(striker, dt);
 
         if (velocity < 0) {
             velocity *= -1;
@@ -306,14 +325,14 @@ void Game::hockeyPuckLogic(float dt)
             velocity = velocityLimit;
         }
 
-        directionVector = striker->getDirectionAngle();
-        if (0 == directionVector.length()) {
-            angle = puck->getAngle().getX();
-        } else {
-            angle = directionVector.getX();
+        friction = puck->getFriction().getY();
+        if (friction > 0) {
+            friction *= -1;
+        } else if (0 == friction) {
+            friction = cFriction * -1;
         }
-        friction = -1 * cFriction;
-        //LOG_DEBUG("Hit strikerBottom. Angle = %f\n", angle);
+
+        LOG_DEBUG("Hit strikerBottom. Angle = %f\n", angle);
     }
 
     if (puck->isHit(m_topBorder)) {
@@ -365,6 +384,7 @@ void Game::hockeyPuckLogic(float dt)
     }
 
     if (isHit) {
+        LOG_DEBUG("Friction = %f\n", friction);
         puck->setAngle(Vector2D(angle, 0));
         puck->setFriction(Vector2D(0, friction));
         puck->setVelocity(Vector2D(0, velocity));

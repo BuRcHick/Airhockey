@@ -36,6 +36,11 @@ private:
     void drawHitbox();
     void setLimits();
 
+    std::tuple<float, float> hockeyPuckHitStrikerLogic(
+            std::shared_ptr<HockeyStriker> striker, float dt);
+    std::tuple<float, float> hockeyPuckHitBorderLogic(HitBox2D border);
+    std::shared_ptr<HockeyStriker> getActiveStriker();
+
     Window* m_window;
 
     std::shared_ptr<GameObject> m_striker_1;
