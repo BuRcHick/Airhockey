@@ -5,6 +5,7 @@
 #include "event/event.hpp"
 #include "hitbox/hitbox_2d.hpp"
 #include "point/point_2d.hpp"
+#include "common/limits.hpp"
 
 #include <utility>
 
@@ -31,6 +32,11 @@ public:
         return std::make_pair(m_width, m_height);
     }
 
+    void setWidthLimits(float min, float max);
+    void setHeightLimits(float min, float max);
+
+    Point2D limitPosition(Point2D position);
+
 protected:
     virtual void drawHitbox();
 
@@ -39,6 +45,8 @@ private:
     TexturesID m_textureID;
     HitBox2D m_hitBox;
     int m_width, m_height;
+    Limits    m_widhtLimits;
+    Limits    m_heightLimits;
 };
 
 #endif /* __GAME_OBJECT_HPP__ */

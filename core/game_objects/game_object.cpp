@@ -23,6 +23,21 @@ bool GameObject::isHit(const HitBox2D& hitbox)
     return m_hitBox.isHit(hitbox);
 }
 
+Point2D GameObject::limitPosition(Point2D position)
+{
+    Point2D limitPosition = m_position;
+
+    if (m_widhtLimits.inRange(position.getX())) {
+        limitPosition.setX(position.getX());
+    }
+
+    if (m_heightLimits.inRange(position.getY())) {
+        limitPosition.setY(position.getY());
+    }
+
+    return limitPosition;
+}
+
 void GameObject::setPosition(Point2D position)
 {
     if (position.getX() < 0 || position.getY() < 0) {
@@ -31,7 +46,9 @@ void GameObject::setPosition(Point2D position)
 
         return;
     }
-    m_position = position;
+
+    m_position = limitPosition(position);
+
     m_hitBox.move(m_position.getX(), m_position.getY());
 }
 
@@ -67,4 +84,15 @@ void GameObject::draw()
                              (int)m_position.getY(), m_width, m_height);
 
     drawHitbox();
+}
+
+void GameObject::setWidthLimits(float min, float max)
+{
+    m_widhtLimits.max = max;
+    m_widhtLimits.min = min;
+}
+void GameObject::setHeightLimits(float min, float max)
+{
+    m_heightLimits.max = max;
+    m_heightLimits.min = min;
 }

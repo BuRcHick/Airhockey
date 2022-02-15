@@ -34,6 +34,7 @@ private:
     void playerLogic();
     void botLogic();
     void drawHitbox();
+    void setLimits();
 
     Window* m_window;
 

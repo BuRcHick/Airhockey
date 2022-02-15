@@ -57,6 +57,8 @@ void HockeyStriker::setPosition(Point2D position)
 
     m_previousPosition = getPosition();
 
+    position = limitPosition(position);
+
     m_topHitBox.move(position.getX(), position.getY());
     m_middleHitBox.move(position.getX(),
                         position.getY() + HITBOX_TOP_BOTTOM_HEIGHT);

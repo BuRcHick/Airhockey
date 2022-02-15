@@ -42,6 +42,26 @@ Game* Game::getGame()
     return m_game;
 }
 
+void Game::setLimits()
+{
+    float width = 0.0f, height = 0.0f, height_max = 0.0f;
+
+    m_puck->setWidthLimits(0, m_config.global.width);
+    m_puck->setHeightLimits(0, m_config.global.height);
+
+    width = m_rightBorder.getX() - m_striker_1->getSize().first;
+    m_striker_1->setWidthLimits(m_leftBorder.getWidth(), width);
+    height = m_centralBorder.getY() + m_centralBorder.getHeight();
+    height_max = m_buttomBorder.getY() - m_striker_1->getSize().second;
+    m_striker_1->setHeightLimits(height, height_max);
+
+    width = m_rightBorder.getX() - m_striker_2->getSize().first;
+    m_striker_2->setWidthLimits(m_leftBorder.getWidth(), width);
+    height = m_centralBorder.getY() - m_striker_2->getSize().second;
+    m_striker_2->setHeightLimits(m_topBorder.getHeight(), height);
+
+}
+
 bool Game::init()
 {
     bool result = true;
@@ -58,20 +78,17 @@ bool Game::init()
 
     m_config = dynamic_cast<ConfigParser*>(m_parser)->getConfig();
 
+    m_window->resize(m_config.global.width, m_config.global.height);
+
     m_striker_1 = std::make_shared<HockeyStriker>();
     m_striker_2 = std::make_shared<HockeyStriker>();
     m_puck = std::make_shared<HockeyPuck>();
 
     m_striker_1->resize(m_config.scene.hockeyStriker.width,
                         m_config.scene.hockeyStriker.height);
-    m_striker_1->setPosition(Point2D(10, 0));
 
     m_puck->resize(m_config.scene.hockeyPuck.width,
                    m_config.scene.hockeyPuck.height);
-
-    width = m_config.global.width / 2 - m_config.scene.hockeyPuck.width / 2;
-    height = m_config.global.height / 2 - m_config.scene.hockeyPuck.height / 2;
-    m_puck->setPosition(Point2D((float) width, (float) height));
 
     height = m_config.global.height - m_config.scene.bottomBorder.height;
     m_buttomBorder.move(0, (float) height);
@@ -97,7 +114,14 @@ bool Game::init()
     m_centralBorder.move(0, height);
     m_centralBorder.resize(width, m_config.scene.centralBorder.height);
 
-    m_window->resize(m_config.global.width, m_config.global.height);
+    setLimits();
+
+    m_striker_1->setPosition(Point2D(50, 50));
+
+    width = m_config.global.width / 2 - m_config.scene.hockeyPuck.width / 2;
+    height = m_config.global.height / 2 - m_config.scene.hockeyPuck.height / 2;
+    m_puck->setPosition(Point2D((float) width, (float) height));
+
 
     EventManager::getManager()->subscribeOnEvent(
             std::make_pair(EventType::SDL_Event, SDL_MOUSEMOTION),
@@ -355,8 +379,6 @@ void Game::update(float dt)
     hockeyPuckLogic(dt);
 
     hockeyStrikerLogic(std::dynamic_pointer_cast<HockeyStriker>(m_striker_1), dt);
-    keepObjectInBorder(m_striker_1);
-
 }
 
 bool AirHockey::init()
