@@ -175,30 +175,7 @@ void Game::keepObjectInBorder(std::shared_ptr<GameObject> object)
 
 void Game::hockeyStrikerLogic(std::shared_ptr<HockeyStriker> striker, float dt)
 {
-    Point2D position = Point2D(0, 0);
-    int puck_width = 0, puck_height = 0, striker_width = 0, striker_height = 0;
-    std::tie(puck_width, puck_height) = m_puck->getSize();
-    std::tie(striker_width, striker_height) = striker->getSize();
-
-    if (m_puck->isHit(striker->getTopHitBox())) {
-        position.setY(m_puck->getPosition().getY() + puck_height);
-    }
-
-    if (m_puck->isHit(striker->getMiddleHitBox())) {
-        int temp_width = m_puck->getPosition().getX() + puck_width;
-        if (temp_width > striker->getPosition().getX()) {
-            position.setX(temp_width);
-        } else {
-            temp_width = striker->getPosition().getX() + striker_width;
-            if (m_puck->getPosition().getX() < temp_width) {
-                position.setX(m_puck->getPosition().getX());
-            }
-        }
-    }
-
-    if (m_puck->isHit(striker->getBottomHitBox())) {
-        position.setY(m_puck->getPosition().getY() - striker_height);
-    }
+    /* TODO: */
 }
 
 void Game::hockeyPuckLogic(float dt)
@@ -247,9 +224,7 @@ void Game::hockeyPuckLogic(float dt)
 
         friction = cFriction;
         LOG_DEBUG("Hit strikerTop. Angle = %f\n", angle);
-    }
-
-    if (puck->isHit(striker->getMiddleHitBox())) {
+    } else if (puck->isHit(striker->getMiddleHitBox())) {
         isHit = true;
 
         accelerationVector = striker->getAcceleration(dt);
@@ -272,15 +247,11 @@ void Game::hockeyPuckLogic(float dt)
             angle = directionVector.getX();
         } else {
             angle = puck->getAngle().getX();
+            angle *= -1;
         }
 
-        angle *= -1;
-
-        friction = puck->getFriction().getY();
         LOG_DEBUG("Hit strikerMiddle. Angle = %f\n", angle);
-    }
-
-    if (puck->isHit(striker->getBottomHitBox())) {
+    } else if (puck->isHit(striker->getBottomHitBox())) {
         isHit = true;
 
         accelerationVector = striker->getAcceleration(dt);
