@@ -45,6 +45,7 @@ private:
     HitBox2D m_buttomBorder;
     HitBox2D m_leftBorder;
     HitBox2D m_rightBorder;
+    HitBox2D m_centralBorder;
 
     HitBox2D m_topGate;
     HitBox2D m_bottomGate;

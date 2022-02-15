@@ -18,8 +18,9 @@ Game::Game()
     m_topBorder(0, 0, 0, 0),
     m_leftBorder(0, 0, 0, 0),
     m_rightBorder(0, 0, 0, 0),
-    m_bottomGate(0, 0, 0, 0),
-    m_topGate(0, 0, 0, 0)
+    m_centralBorder(0, 0, 0, 0),
+    m_topGate(0, 0, 0, 0),
+    m_bottomGate(0, 0, 0, 0)
 {
     m_window = Window::create("Big Dick Game");
     m_window->resize(WIDTH, HEIGHT);
@@ -90,6 +91,12 @@ bool Game::init()
     m_rightBorder.resize(m_config.scene.rightBorder.width,
                          m_config.scene.rightBorder.height);
 
+    width = m_config.scene.centralBorder.width;
+    height = m_config.global.height / 2;
+    height -= m_config.scene.centralBorder.height / 2;
+    m_centralBorder.move(0, height);
+    m_centralBorder.resize(width, m_config.scene.centralBorder.height);
+
     m_window->resize(m_config.global.width, m_config.global.height);
 
     EventManager::getManager()->subscribeOnEvent(
@@ -127,6 +134,11 @@ void Game::drawHitbox()
                                    m_leftBorder.getY(),
                                    m_leftBorder.getWidth(),
                                    m_leftBorder.getHeight());
+
+    texture_manager->drawRectangle(m_centralBorder.getX(),
+                                   m_centralBorder.getY(),
+                                   m_centralBorder.getWidth(),
+                                   m_centralBorder.getHeight());
 }
 
 void Game::draw()
