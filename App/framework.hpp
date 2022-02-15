@@ -46,8 +46,8 @@ private:
     HitBox2D m_leftBorder;
     HitBox2D m_rightBorder;
 
-    HitBox2D m_leftGate;
-    HitBox2D m_rightGate;
+    HitBox2D m_topGate;
+    HitBox2D m_bottomGate;
 
     XMLLoader* m_parser;
     Config m_config;

@@ -18,8 +18,8 @@ Game::Game()
     m_topBorder(0, 0, 0, 0),
     m_leftBorder(0, 0, 0, 0),
     m_rightBorder(0, 0, 0, 0),
-    m_leftGate(0, 0, 0, 0),
-    m_rightGate(0, 0, 0, 0)
+    m_bottomGate(0, 0, 0, 0),
+    m_topGate(0, 0, 0, 0)
 {
     m_window = Window::create("Big Dick Game");
     m_window->resize(WIDTH, HEIGHT);
