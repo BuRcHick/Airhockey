@@ -17,6 +17,9 @@
         <Border type="right">
             <width> 20 </width>
         </Border>
+        <Border type="center">
+            <height> 20 </height>
+        </Border>
         <!-- ===================GameObjects=================== -->
         <GameObject type="HockeyStriker">
             <width> 70 </width>

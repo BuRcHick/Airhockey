@@ -20,6 +20,7 @@ struct Config {
         Size bottomBorder;
         Size leftBorder;
         Size rightBorder;
+        Size centralBorder;
         Size hockeyPuck;
         Size hockeyStriker;
     } scene;

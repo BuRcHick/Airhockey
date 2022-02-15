@@ -63,6 +63,8 @@ bool parseBorders(tinyxml2::XMLElement* element, Config& config)
         result &= parseSizeParams(element, config, config.scene.leftBorder);
     } else if (0 == strcmp("right", element->Attribute("type"))) {
         result &= parseSizeParams(element, config, config.scene.rightBorder);
+    } else if (0 == strcmp("center", element->Attribute("type"))) {
+        result &= parseSizeParams(element, config, config.scene.centralBorder);
     }
 
     return result;
