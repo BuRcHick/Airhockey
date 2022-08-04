@@ -1,7 +1,7 @@
 #ifndef __EVENT_HPP__
 #define __EVENT_HPP__
 
-#include "SDL2/SDL_events.h"
+#include "SDL_events.h"
 #include "game_event.hpp"
 #include "logger/logger.hpp"
 

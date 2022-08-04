@@ -1,4 +1,4 @@
-#include "SDL2/SDL.h"
+#include "SDL.h"
 #include "framework.hpp"
 #include "texture/texture_manager.hpp"
 #include "game_objects/hockey_striker.hpp"

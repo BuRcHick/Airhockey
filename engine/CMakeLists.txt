@@ -1,5 +1,9 @@
-include_directories("${PROJECT_SOURCE_DIR}/external/include")
 include_directories("${PROJECT_SOURCE_DIR}/engine")
+
+include_directories("${PROJECT_SOURCE_DIR}/external/libs/SDL2/include")
+include_directories("${PROJECT_SOURCE_DIR}/external/libs/SDL2_image")
+include_directories("${PROJECT_SOURCE_DIR}/external/libs/SDL2_ttf")
+include_directories("${PROJECT_SOURCE_DIR}/external/libs/xml")
 
 add_library(
     engine
@@ -12,15 +16,3 @@ add_library(
     vector/vector_2d.cpp
     point/point_2d.cpp
 )
-
-find_library(SDL2 NAMES "SDL2")
-find_library(SDL2_image NAMES "SDL2_image")
-find_library(SDL2_ttf NAMES "SDL2_ttf")
-
-message("SDL libraries ${SDL2} ${SDL2_image} ${SDL2_ttf}")
-
-find_library(XML tinyxml2)
-
-message("XML libraries ${XML}")
-
-target_link_libraries(engine ${SDL2} ${SDL2_image} ${SDL2_ttf} ${XML})

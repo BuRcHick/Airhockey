@@ -1,7 +1,7 @@
-include_directories("${PROJECT_SOURCE_DIR}/external/include")
 include_directories("${PROJECT_SOURCE_DIR}/engine")
 include_directories("${PROJECT_SOURCE_DIR}/core")
 
+include_directories("${PROJECT_SOURCE_DIR}/external/libs/SDL2/include")
 add_library(
     core
     game_objects/game_object.cpp

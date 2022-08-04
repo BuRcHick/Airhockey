@@ -2,7 +2,6 @@
 #define __HOCKEY_PUCK_HPP__
 
 #include "physic_object.hpp"
-#include "math/percentage.hpp"
 
 #include <mutex>
 

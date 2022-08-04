@@ -1,7 +1,7 @@
 #ifndef __XML_LOADER_HPP__
 #define __XML_LOADER_HPP__
 
-#include "xml/tinyxml2.h"
+#include "tinyxml2.h"
 
 class XMLLoader {
 public:
